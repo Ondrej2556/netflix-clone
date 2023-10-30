@@ -17,11 +17,12 @@ import Image from "next/image";
 import { useMediaQuery } from "@react-hook/media-query";
 
 const LoggedNavbar = () => {
-  const mediaQuery = useMediaQuery("(max-width: 1023px)");
+  const mediaQuery = useMediaQuery("(max-width: 830px)");
   const [isSecondMenuShown, setIsSecondMenuShown] = useState(false);
   const [isMainMenuShown, setIsMainMenuShown] = useState(false);
   const [navMenu, setNavMenu] = useState<JSX.Element | null>(null);
   const timeoutRef = useRef<number | NodeJS.Timeout | null>(null);
+  const [scrollBg, setScrollBg] = useState('bg-gradient-to-b from-black to-transparent ');
 
   useEffect(() => {
     const updatedNavMenu = mediaQuery ? (
@@ -30,21 +31,34 @@ const LoggedNavbar = () => {
         onMouseEnter={() => handleMouseEnter("main")}
         onMouseLeave={() => handleMouseLeave("main")}
       >
-        <button>Discover</button>
+        <button>Prohlížet</button>
         <IoCaretDownSharp size={15} />
       </div>
     ) : (
       <>
-        <Link href="/browse">Homepage</Link>
-        <Link href="/series">Series</Link>
-        <Link href="/browse">Movies</Link>
-        <Link href="/browse">Favourites</Link>
-        <Link href="/browse">My list</Link>
+        <Link href="/browse">Domovská stránka</Link>
+        <Link href="/series">Pořady</Link>
+        <Link href="/browse">Filmy</Link>
+        <Link href="/browse">Nové a oblíbené</Link>
+        <Link href="/browse">Můj seznam</Link>
       </>
     );
 
     setNavMenu(updatedNavMenu);
   }, [mediaQuery]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        setScrollBg('bg-black');
+      } else {
+        setScrollBg('bg-gradient-to-b from-black to-transparent');
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleMouseEnter = (menu: string) => {
     if (timeoutRef.current) {
@@ -60,9 +74,10 @@ const LoggedNavbar = () => {
     }, 200);
   };
   return (
-    <nav className="border-2 border-pink-600">
-      <div className="lg:px-10 px-4 py-5 flex items-center">
-        <div className="flex items-center flex-1 lg:justify-between gap-6">
+    <nav className={`transition-all duration-150 ease-in-out fixed w-full ${scrollBg}`} >
+
+      <div className="lg:px-16 px-4 py-5 flex items-center">
+        <div className="flex items-center flex-2 lg:justify-between gap-6">
           {/* MAIN NAV + LOGO */}
           <Logo width={100} height={100} />
           {navMenu}
@@ -76,31 +91,31 @@ const LoggedNavbar = () => {
                 className="py-4 hover:bg-neutral-600 transiiton w-full text-center"
                 href="/browse"
               >
-                Homepage
+                Domovská stránka
               </Link>
               <Link
                 className="py-4 hover:bg-neutral-600 transiiton w-full text-center"
                 href="/series"
               >
-                Series
+                Pořady
               </Link>
               <Link
                 className="py-4 hover:bg-neutral-600 transiiton w-full text-center"
                 href="/browse"
               >
-                Movies
+                Filmy
               </Link>
               <Link
                 className="py-4 hover:bg-neutral-600 transiiton w-full text-center"
                 href="/browse"
               >
-                Favourites
+                Nové a oblíbené
               </Link>
               <Link
                 className="py-4 hover:bg-neutral-600 transiiton w-full text-center"
                 href="/browse"
               >
-                My list
+                Můj seznam
               </Link>
             </div>
           )}
@@ -149,15 +164,15 @@ const LoggedNavbar = () => {
                     </div>
                     <div className="flex gap-2 items-center cursor-pointer hover:underline">
                       <IoReloadCircleOutline size={20} />
-                      <h3>Prevest profil</h3>
+                      <h3>Převést profil</h3>
                     </div>
                     <div className="flex gap-2 items-center cursor-pointer hover:underline">
                       <FaRegUser size={20} />
-                      <h3>Account</h3>
+                      <h3>Účet</h3>
                     </div>
                     <div className="flex gap-2 items-center cursor-pointer hover:underline">
                       <FaRegQuestionCircle size={20} />
-                      <h3>Help</h3>
+                      <h3>Centrum zákaznické podpory</h3>
                     </div>
                   </div>
                   <h3
