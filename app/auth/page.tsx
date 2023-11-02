@@ -8,6 +8,7 @@ import axios from "axios";
 import { signIn } from "next-auth/react";   
 import { useSession } from "next-auth/react"
 import { redirect } from "next/navigation"
+import { toast } from "react-toastify";
 
 
 const Auth =  () => {
@@ -34,7 +35,6 @@ const Auth =  () => {
       if(password.length === 0) {setPasswordError(true); return;}
       
       removeCookie("tempEmail", null)
-      console.log("User emai: ", email, "User passwrod", password)
       try {
         await signIn("credentials", {
           email,
@@ -42,6 +42,8 @@ const Auth =  () => {
           redirect: true,
           callbackUrl: "/browse"
         })
+      toast.success("Successfull login.")
+
       } catch (error) {
         console.log(error)
       }
@@ -51,7 +53,7 @@ const Auth =  () => {
       if(password.length === 0) {setPasswordError(true); return;}
       if(name.length === 0) {setNameError(true); return;}
       
-      console.log("User emai: ", email, "User name: ", name,  "User passwrod", password)
+      toast.success("Successfull register.")
 
       try {
         await axios.post("/api/register" , {

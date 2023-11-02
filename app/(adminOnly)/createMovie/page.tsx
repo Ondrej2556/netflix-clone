@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { FaDoorOpen } from "react-icons/fa";
 import { useState, ChangeEvent, FormEvent } from "react";
-import axios from "axios"
+import axios from "axios";
 import { toast } from "react-toastify";
 
 interface createMovieInterface {
@@ -37,6 +37,7 @@ const CreateMovie = () => {
     seriesCount: 0,
     quality: "HD",
   });
+  const [isMovieSelected, setIsMovieSelected] = useState(false);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -59,21 +60,21 @@ const CreateMovie = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-        const dataToSend = {
-            ...formData,
-            categoryId: Number(formData.categoryId),
-            match: Number(formData.match),
-            minAge: Number(formData.minAge),
-            seriesCount: Number(formData.seriesCount),
-          };
-        const res = await axios.post("/api/movie", {
-            email: session.user?.email,
-            formData: dataToSend
-        })
-        toast.success("Film vytvořen");
-        router.push("/browse");
+      const dataToSend = {
+        ...formData,
+        categoryId: Number(formData.categoryId),
+        match: Number(formData.match),
+        minAge: Number(formData.minAge),
+        seriesCount: Number(formData.seriesCount),
+      };
+      const res = await axios.post("/api/movie", {
+        email: session.user?.email,
+        formData: dataToSend,
+      });
+      toast.success("Film vytvořen");
+      router.push("/browse");
     } catch (error) {
-        console.log(error)
+      console.log(error);
     }
   };
 
@@ -95,7 +96,7 @@ const CreateMovie = () => {
           id="categoryId"
           name="categoryId"
           value={formData.categoryId}
-          onChange={handleChange}
+          onChange={() => {handleChange; setIsMovieSelected(!isMovieSelected)}}
           required
           className="w-2/3 bg-neutral-700 py-1 rounded-md"
         >
@@ -156,17 +157,22 @@ const CreateMovie = () => {
           max={21}
           required
         />
-        <label htmlFor="movieName">Počet sérií: </label>
-        <input
-          type="number"
-          id="seriesCount"
-          name="seriesCount"
-          value={formData.seriesCount}
-          onChange={handleChange}
-          className="w-2/3 bg-neutral-700 py-1 rounded-md"
-          min={0}
-          required
-        />
+        {isMovieSelected && (
+          <>
+            <label htmlFor="movieName">Počet sérií: </label>
+            <input
+              type="number"
+              id="seriesCount"
+              name="seriesCount"
+              value={formData.seriesCount}
+              onChange={handleChange}
+              className="w-2/3 bg-neutral-700 py-1 rounded-md"
+              min={0}
+              required
+            />
+          </>
+        )}
+
         <label htmlFor="categoryId">Kvalita: </label>
         <select
           id="quality"
@@ -184,7 +190,12 @@ const CreateMovie = () => {
         </select>
 
         {/* Submit button */}
-        <button className="bg-red-700 w-1/3 p-2 mt-4 rounded-md hover:bg-red-800" type="submit">Submit</button>
+        <button
+          className="bg-red-700 w-1/3 p-2 mt-4 rounded-md hover:bg-red-800"
+          type="submit"
+        >
+          Submit
+        </button>
       </form>
     </div>
   );

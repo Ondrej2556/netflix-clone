@@ -113,7 +113,7 @@ const Browse = () => {
               <MovieSlider data={movies} />
             </div>
           </main>
-          <footer>Footer</footer>
+          <footer className="py-36">Footer</footer>
         </>
       )}
     </>

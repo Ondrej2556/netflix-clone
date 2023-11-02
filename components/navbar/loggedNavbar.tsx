@@ -99,7 +99,7 @@ const LoggedNavbar: React.FC<loggedNavbarProps> = ({
   };
   return (
     <nav
-      className={`transition-all duration-150 ease-in-out fixed w-full ${scrollBg} md:text-xs`}
+      className={`transition-all duration-150 ease-in-out fixed w-full ${scrollBg} md:text-xs z-50`}
     >
       <div className="lg:px-16 px-4 py-5 flex items-center">
         <div className="flex items-center flex-2 lg:justify-between gap-6">
@@ -170,7 +170,7 @@ const LoggedNavbar: React.FC<loggedNavbarProps> = ({
                     clearTimeout(timeoutRef.current as number)
                   }
                   onMouseLeave={() => setIsSecondMenuShown(false)}
-                  className="absolute w-48  z-10 top-12  border-[1px] border-neutral-700 bg-black bg-opacity-80 right-1 flex flex-col text-sm"
+                  className="absolute w-48  z-50 top-12  border-[1px] border-neutral-700 bg-black bg-opacity-80 right-1 flex flex-col text-sm"
                 >
                   <div className="p-2 flex flex-col gap-3 text-xs">
                     {userAccounts
