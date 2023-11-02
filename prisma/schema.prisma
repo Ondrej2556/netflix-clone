@@ -10,32 +10,36 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// user.model.prisma
 model User {
   id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  name    String 
   email   String   @unique
-  name    String
   password String
-  //Account [id] max. 5
+  accounts Account[]
 }
 
-//Account - DB Schema
+// account.model.prisma
+model Account {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId       String @db.ObjectId
+  imageUrl     String
+  nickname     String
+  likedMoviesId  String[]
+  user         User     @relation(fields: [userId], references: [id])
+}
 
-//id
-//userId [User.id]
-//likedMovies [Movie.id]
-//Nickname
-//ImageUrl
+// movie.model.prisma
+model Movie {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  categoryId    Int
+  movieName     String
+  thumbNailUrl  String
+  properties    String[]
+  match         Int
+  minAge        Int
+  seriesCount   Int
+  quality       String
+  new           Boolean
+}
 
-// Movie - DB Schema
-
-// id
-// categoryId = 1
-// categoryTitle = "Pořady"
-// movieName = "Papírový dům"
-// thumbNailUrl="https://occ-0-2773-2774.1.nflxso.net/dnm/api/v6/6gmvu2hxdfnQ55LZZjyzYR4kzGk/AAAABR_TE_TEx_rqT7NguyOAkiKBIX9tX5D-d8q7K19M1pA8CIzfHbdYDzLQX9Qntxaga2cPBua5JQyFAq6VXHWAmjcUePWZx4r5TtcePvT2TLWLrumx3SKFgUMEDPJ3aFGwZw55.jpg?r=f16"
-// properties = ["Napínavý", "Vzrušující", "Thriller"]
-// match= "98% shoda"
-// minAge= "16+"
-// seriesCount=5
-// quality="HD"
-// new =  true/false

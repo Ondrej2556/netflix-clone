@@ -12,18 +12,42 @@ import {
   FaRegQuestionCircle,
 } from "react-icons/fa";
 import { IoCaretDownSharp, IoReloadCircleOutline } from "react-icons/io5";
-
 import Image from "next/image";
 import { useMediaQuery } from "@react-hook/media-query";
+import { Account } from "@/d.types";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
-const LoggedNavbar = () => {
+interface loggedNavbarProps {
+  userAccounts: Account[] | null;
+  selectedAccount: Account;
+  setAccount: React.Dispatch<React.SetStateAction<any>>;
+}
+
+const LoggedNavbar: React.FC<loggedNavbarProps> = ({
+  userAccounts,
+  selectedAccount,
+  setAccount,
+}) => {
+  const router = useRouter();
+  const { data: session } = useSession();
+
   const mediaQuery = useMediaQuery("(max-width: 830px)");
   const [isSecondMenuShown, setIsSecondMenuShown] = useState(false);
   const [isMainMenuShown, setIsMainMenuShown] = useState(false);
   const [navMenu, setNavMenu] = useState<JSX.Element | null>(null);
   const timeoutRef = useRef<number | NodeJS.Timeout | null>(null);
-  const [scrollBg, setScrollBg] = useState('bg-gradient-to-b from-black to-transparent ');
+  const [scrollBg, setScrollBg] = useState(
+    "bg-gradient-to-b from-black to-transparent "
+  );
 
+    const handleLogout = ()=> {
+      localStorage.removeItem("account")
+      signOut(); 
+      router.push("/")
+      router.refresh()
+    }
+  
   useEffect(() => {
     const updatedNavMenu = mediaQuery ? (
       <div
@@ -50,14 +74,14 @@ const LoggedNavbar = () => {
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 0) {
-        setScrollBg('bg-black');
+        setScrollBg("bg-black");
       } else {
-        setScrollBg('bg-gradient-to-b from-black to-transparent');
+        setScrollBg("bg-gradient-to-b from-black to-transparent");
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const handleMouseEnter = (menu: string) => {
@@ -74,8 +98,9 @@ const LoggedNavbar = () => {
     }, 200);
   };
   return (
-    <nav className={`transition-all duration-150 ease-in-out fixed w-full ${scrollBg}`} >
-
+    <nav
+      className={`transition-all duration-150 ease-in-out fixed w-full ${scrollBg} md:text-xs`}
+    >
       <div className="lg:px-16 px-4 py-5 flex items-center">
         <div className="flex items-center flex-2 lg:justify-between gap-6">
           {/* MAIN NAV + LOGO */}
@@ -85,7 +110,7 @@ const LoggedNavbar = () => {
             <div
               onMouseEnter={() => clearTimeout(timeoutRef.current as number)}
               onMouseLeave={() => setIsMainMenuShown(false)}
-              className="absolute border-t-[3px] border-x-[0.1px] border-b-[0.1px] border-white border-x-slate-400 border-b-slate-500 z-10 w-72 flex flex-col items-center top-24 bg-black opacity-80"
+              className="absolute border-t-[3px] border-x-[0.1px] border-b-[0.1px] border-white border-x-slate-400 border-b-slate-500 z-10 w-72 flex flex-col items-center top-24 bg-black opacity-90"
             >
               <Link
                 className="py-4 hover:bg-neutral-600 transiiton w-full text-center"
@@ -132,7 +157,7 @@ const LoggedNavbar = () => {
               onMouseLeave={() => handleMouseLeave("second")}
             >
               <Image
-                src="/images/default-blue.png"
+                src={selectedAccount.imageUrl}
                 width={30}
                 height={30}
                 alt="Avatar"
@@ -145,42 +170,62 @@ const LoggedNavbar = () => {
                     clearTimeout(timeoutRef.current as number)
                   }
                   onMouseLeave={() => setIsSecondMenuShown(false)}
-                  className="absolute w-48  z-10 top-12  border-[1px] border-neutral-700 bg-black bg-opacity-80 right-1 flex flex-col "
+                  className="absolute w-48  z-10 top-12  border-[1px] border-neutral-700 bg-black bg-opacity-80 right-1 flex flex-col text-sm"
                 >
-                  <div className="p-2 flex flex-col gap-3 ">
-                    <div className="flex gap-2 items-center cursor-pointer hover:underline">
-                      <Image
-                        src="/images/default-red.png"
-                        width={30}
-                        height={30}
-                        alt="Avatar"
-                        className="rounded-md"
-                      />
-                      <h3>Ondřej</h3>
-                    </div>
-                    <div className="flex gap-2 items-center cursor-pointer hover:underline">
+                  <div className="p-2 flex flex-col gap-3 text-xs">
+                    {userAccounts
+                      ?.filter((account) => account.id !== selectedAccount.id)
+                      .map((account) => (
+                        <div
+                          key={account.id}
+                          onClick={() => {setAccount(account); localStorage.setItem("account", JSON.stringify(account))}}
+                          className="flex gap-2 items-center cursor-pointer hover:underline"
+                        >
+                          <Image
+                            src={account.imageUrl}
+                            width={30}
+                            height={30}
+                            alt="Avatar"
+                            className="rounded-md"
+                          />
+                          <h6>{account.nickname}</h6>
+                        </div>
+                      ))}
+                      {session?.user?.email==="admin@admin.cz" && (
+                    <div
+                      onClick={() => router.push("/createMovie")}
+                      className="flex gap-2 items-center cursor-pointer hover:underline"
+                    >
                       <FaPencilAlt size={20} />
-                      <h3>Spravovat profily</h3>
+                      <h4>Vytvořit film</h4>
+                    </div>
+                      )}
+                    <div
+                      onClick={() => router.push("/")}
+                      className="flex gap-2 items-center cursor-pointer hover:underline"
+                    >
+                      <FaPencilAlt size={20} />
+                      <h4>Spravovat profily</h4>
                     </div>
                     <div className="flex gap-2 items-center cursor-pointer hover:underline">
                       <IoReloadCircleOutline size={20} />
-                      <h3>Převést profil</h3>
+                      <h4>Převést profil</h4>
                     </div>
                     <div className="flex gap-2 items-center cursor-pointer hover:underline">
                       <FaRegUser size={20} />
-                      <h3>Účet</h3>
+                      <h4>Účet</h4>
                     </div>
                     <div className="flex gap-2 items-center cursor-pointer hover:underline">
                       <FaRegQuestionCircle size={20} />
-                      <h3>Centrum zákaznické podpory</h3>
+                      <h4>Centrum zákaznické podpory</h4>
                     </div>
                   </div>
-                  <h3
-                    onClick={() => signOut()}
-                    className="border-t-[1px] border-neutral-700 text-center py-2 cursor-pointer hover:underline"
+                  <h6
+                    onClick={handleLogout}
+                    className="border-t-[1px] border-neutral-700 text-center py-2 cursor-pointer hover:underline text-sm"
                   >
-                    Log out
-                  </h3>
+                    Odhlásit se z Neftlixu
+                  </h6>
                 </div>
               )}
             </div>

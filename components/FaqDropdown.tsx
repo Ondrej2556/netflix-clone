@@ -13,7 +13,7 @@ const FaqDropdown: React.FC<FaqDropdownProps> = ({ question, answer }) => {
     <>
       <div
         onClick={()=> setIsOpened(!isOpened)}
-      className="bg-neutral-800 w-full h-20 mb-1 px-6 flex justify-between items-center cursor-pointer hover:bg-neutral-700 transition">
+      className="bg-neutral-800 w-full h-[4rem] mb-1 px-6 flex justify-between items-center cursor-pointer hover:bg-neutral-700 transition">
         <h3 className="sm:text-2xl text-xl">{question}</h3>
         <h3 className="sm:text-3xl text-2xl ">{isOpened ? "❌" : "➕"}</h3>
       </div>

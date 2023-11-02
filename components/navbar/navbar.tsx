@@ -13,12 +13,12 @@ const Navbar: React.FC<navbarProps> = ({ type }) => {
     <nav className="w-full fixed">
       <div className="w-9/12 mx-auto sm:px-16 py-6 flex flex-row justify-between ">
         <Link href="/">
-          <Logo width={150} height={150}/>
+          <Logo width={100} height={150}/>
         </Link>
         <div>
           {type === "home" && (
             <Link
-              className="bg-red-700 px-4 py-2 rounded-md hover:bg-red-800 transition flex"
+              className="bg-red-700 px-4 xl:py-2 py-1 rounded-md hover:bg-red-800 transition flex"
               href="/auth"
             >
               Sign In

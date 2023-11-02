@@ -3,7 +3,7 @@ import React from 'react'
 const Footer = () => {
   return (
     <footer>
-        <div className="w-9/12 mx-auto sm:px-16 py-16 text-zinc-400 font-semibold sm:text-md text-sm cursor-pointer">
+        <div className="w-9/12 mx-auto sm:px-16 py-16 text-zinc-400 font-semibold xl:text-md md:text-xs cursor-pointer">
           <div>
             <h5 className="underline">Questions? Contact us.</h5>
             <br />
