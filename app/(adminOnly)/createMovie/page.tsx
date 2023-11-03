@@ -67,7 +67,7 @@ const CreateMovie = () => {
         minAge: Number(formData.minAge),
         seriesCount: Number(formData.seriesCount),
       };
-      const res = await axios.post("/api/movie", {
+       await axios.post("/api/movie", {
         email: session.user?.email,
         formData: dataToSend,
       });
@@ -96,7 +96,7 @@ const CreateMovie = () => {
           id="categoryId"
           name="categoryId"
           value={formData.categoryId}
-          onChange={() => {handleChange; setIsMovieSelected(!isMovieSelected)}}
+          onChange={(e) => {handleChange(e); setIsMovieSelected(!isMovieSelected)}}
           required
           className="w-2/3 bg-neutral-700 py-1 rounded-md"
         >
@@ -157,7 +157,7 @@ const CreateMovie = () => {
           max={21}
           required
         />
-        {isMovieSelected && (
+        {!isMovieSelected && (
           <>
             <label htmlFor="movieName">Počet sérií: </label>
             <input

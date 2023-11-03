@@ -11,7 +11,7 @@ export async function GET(req: Request) {
       throw new Error("Category id missing");
     }
     const series = await prisma.movie.findMany({
-      take: 10,
+      take: 20,
       where: {
         categoryId: Number(categoryId),
       },

@@ -68,7 +68,7 @@ const Auth =  () => {
   return (
     <>
       <main>
-        <div className="bg-[url('/images/hero.jpg')] w-full h-full bg-center bg-cover bg-no-repeat">
+        <div className="bg-[url('/images/hero.jpg')] w-full h-screen bg-center bg-cover bg-no-repeat">
           <Navbar type="auth" />
           <div className="bg-black h-full sm:bg-opacity-60 flex items-center justify-center">
             <div className="xl:w-[28rem] sm:w-96 w-full flex items-center flex-col gap-4  p-16 bg-black bg-opacity-70 xl:-mt-10 mt-24 mb-10">

@@ -38,7 +38,7 @@ model Movie {
   properties    String[]
   match         Int
   minAge        Int
-  seriesCount   Int
+  seriesCount   Int?
   quality       String
   new           Boolean
 }

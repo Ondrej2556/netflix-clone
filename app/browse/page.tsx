@@ -7,14 +7,16 @@ import { FaPlay, FaInfoCircle } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import SelectAccount from "@/components/account/selectAccount";
 import { Account } from "@/d.types";
-import MovieSlider from "@/components/movieSlider";
+import MovieSlider from "@/components/movie/movieSlider";
 import axios from "axios";
+import MovieModal from "@/components/movie/movieModal";
 
 const Browse = () => {
   const [selectedAccount, setSelectedAccount] = useState<Account | null>();
   const [userAccounts, setUserAccounts] = useState<Account[] | null>(null);
   const [series, setSeries] = useState();
   const [movies, setMovies] = useState();
+  const [isMovieModalOpen, SetIsMovieModalOpen] = useState(false);
   const router = useRouter();
   const { data: session } = useSession();
 
@@ -66,16 +68,16 @@ const Browse = () => {
           userAccounts={userAccounts}
         />
       ) : (
-        <>
+        <div className="relative">
           <header>
             <LoggedNavbar
               userAccounts={userAccounts}
               selectedAccount={selectedAccount}
               setAccount={setSelectedAccount}
             />
-            <div className="bg-[url('/images/loggedHero.webp')] w-full h-screen bg-center bg-cover bg-no-repeat">
+            <div className="bg-[url('/images/loggedHero.webp')] w-full lg:h-screen h-full bg-center bg-cover bg-no-repeat">
               <div className="bg-black h-full bg-opacity-10 flex justify-left items-start ">
-                <div className=" flex justify-center flex-col  gap-4 lg:mx-16 mx-4 mt-32 sm:w-1/3">
+                <div className=" flex justify-center flex-col  gap-4 lg:mx-16 mx-4 mt-32 lg:w-1/3 sm:w-2/3 ">
                   <img
                     className="max-w-none- "
                     src="/images/loggedHeroTitle.webp"
@@ -89,7 +91,7 @@ const Browse = () => {
                     znova narazí soupeři Johny a Daniel. Další pokračování série
                     filmů "Karate Kid".
                   </p>
-                  <div className="flex gap-4 mt-2 xl:text-2xl text-sm">
+                  <div className="flex gap-4 mt-2 2xl:text-2xl  lg:text-md  text-sm pb-20 z-20">
                     <button className="flex items-center gap-2 py-3 px-8 bg-white text-black  font-semibold rounded-md transition hover:bg-neutral-400">
                       <FaPlay />
                       Přehrát
@@ -103,18 +105,19 @@ const Browse = () => {
               </div>
             </div>
           </header>
-          <main>
-            <div className="-mt-24">
-              <h1 className="lg:pl-16 pl-4 -mb-16 mt-10 ">Pořady</h1>
-              <MovieSlider data={series} />
+          <main className="relative">
+            <div className="lg:-mt-56 -mt-28">
+              <h1 className="lg:pl-16 pl-4 lg:-mb-36 -mb-24 mt-10 lg:text-3xl">Pořady</h1>
+              <MovieSlider data={series} openMovieModal={SetIsMovieModalOpen}/>
             </div>
-            <div className="-mt-10">
-              <h1 className="lg:pl-16 pl-4 -mb-14 mt-10 ">Filmy</h1>
-              <MovieSlider data={movies} />
+            <div className="lg:-mt-30 -mt-20">
+              <h1 className="lg:pl-16 pl-4 lg:-mb-36 -mb-24 mt-10 lg:text-3xl">Filmy</h1>
+              <MovieSlider data={movies} openMovieModal={SetIsMovieModalOpen}/>
             </div>
           </main>
-          <footer className="py-36">Footer</footer>
-        </>
+          <MovieModal closeMovieModal={SetIsMovieModalOpen} onMovieOpen={isMovieModalOpen}/>
+          <footer className="py-96">Footer</footer>
+        </div>
       )}
     </>
   );
