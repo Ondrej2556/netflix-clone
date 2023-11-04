@@ -17,6 +17,7 @@ import { useMediaQuery } from "@react-hook/media-query";
 import { Account } from "@/d.types";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { toast } from "react-toastify";
 
 interface loggedNavbarProps {
   userAccounts: Account[] | null;
@@ -46,6 +47,7 @@ const LoggedNavbar: React.FC<loggedNavbarProps> = ({
       signOut(); 
       router.push("/")
       router.refresh()
+      toast.success("Úspěšně odhlášen")
     }
   
   useEffect(() => {
@@ -178,7 +180,7 @@ const LoggedNavbar: React.FC<loggedNavbarProps> = ({
                       .map((account) => (
                         <div
                           key={account.id}
-                          onClick={() => {setAccount(account); localStorage.setItem("account", JSON.stringify(account))}}
+                          onClick={() => {setAccount(account); localStorage.setItem("account", JSON.stringify(account)); router.push("/")}}
                           className="flex gap-2 items-center cursor-pointer hover:underline"
                         >
                           <Image

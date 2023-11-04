@@ -10,13 +10,18 @@ import { Account } from "@/d.types";
 import MovieSlider from "@/components/movie/movieSlider";
 import axios from "axios";
 import MovieModal from "@/components/movie/movieModal";
+import { Movie } from "@/d.types";
+import Footer from "@/components/footer";
 
 const Browse = () => {
   const [selectedAccount, setSelectedAccount] = useState<Account | null>();
   const [userAccounts, setUserAccounts] = useState<Account[] | null>(null);
-  const [series, setSeries] = useState();
-  const [movies, setMovies] = useState();
+  const [series, setSeries] = useState<Movie[] | undefined>();
+  const [movies, setMovies] = useState<Movie[] | undefined>();
+  const [likedMovies, setLikedMovies] = useState<Movie[] | undefined>();
+  const [reccomendedMovies, setReccomendedMovies] = useState<Movie[] | undefined>();
   const [isMovieModalOpen, SetIsMovieModalOpen] = useState(false);
+  const [selectedMovie, setSelectedMovie] = useState<Movie |null>(null)
   const router = useRouter();
   const { data: session } = useSession();
 
@@ -48,9 +53,27 @@ const Browse = () => {
         console.log(error);
       }
     };
+    if(!selectedAccount) {
+      return
+    }
+    const getLikedMovies = async () => {
+      try {
+        const series = await axios.get("/api/account/movie/favorites", {
+          params: { userId: selectedAccount.id },
+        });
+        setLikedMovies(series.data);
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
     getSeries();
     getMovies();
-  }, []);
+    getLikedMovies()
+    if (movies) {
+      setReccomendedMovies(movies.slice().reverse());
+    }
+  }, [selectedAccount, movies]);
   
   useEffect(() => {
     const account = localStorage.getItem("account");
@@ -108,15 +131,25 @@ const Browse = () => {
           <main className="relative">
             <div className="lg:-mt-56 -mt-28">
               <h1 className="lg:pl-16 pl-4 lg:-mb-36 -mb-24 mt-10 lg:text-3xl">Pořady</h1>
-              <MovieSlider data={series} openMovieModal={SetIsMovieModalOpen}/>
+              <MovieSlider data={series} openMovieModal={SetIsMovieModalOpen} selectMovie={setSelectedMovie} user={selectedAccount} />
             </div>
             <div className="lg:-mt-30 -mt-20">
               <h1 className="lg:pl-16 pl-4 lg:-mb-36 -mb-24 mt-10 lg:text-3xl">Filmy</h1>
-              <MovieSlider data={movies} openMovieModal={SetIsMovieModalOpen}/>
+              <MovieSlider data={movies} openMovieModal={SetIsMovieModalOpen} selectMovie={setSelectedMovie} user={selectedAccount} />
+            </div>
+            {likedMovies && (
+            <div className="lg:-mt-30 -mt-20">
+              <h1 className="lg:pl-16 pl-4 lg:-mb-36 -mb-24 mt-10 lg:text-3xl">Oblíbené filmy uživatele: {selectedAccount.nickname}</h1>
+                <MovieSlider data={likedMovies} openMovieModal={SetIsMovieModalOpen} selectMovie={setSelectedMovie} user={selectedAccount} />
+            </div>
+            )}
+            <div className="lg:-mt-30 -mt-20">
+              <h1 className="lg:pl-16 pl-4 lg:-mb-36 -mb-24 mt-10 lg:text-3xl">Top tipy pro profil: {selectedAccount.nickname}</h1>
+              <MovieSlider data={reccomendedMovies} openMovieModal={SetIsMovieModalOpen} selectMovie={setSelectedMovie} user={selectedAccount} />
             </div>
           </main>
-          <MovieModal closeMovieModal={SetIsMovieModalOpen} onMovieOpen={isMovieModalOpen}/>
-          <footer className="py-96">Footer</footer>
+          <MovieModal closeMovieModal={SetIsMovieModalOpen} onMovieOpen={isMovieModalOpen} selectedMovie={selectedMovie} user={selectedAccount}/>
+          <Footer />
         </div>
       )}
     </>

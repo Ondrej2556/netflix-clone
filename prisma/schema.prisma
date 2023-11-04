@@ -41,5 +41,10 @@ model Movie {
   seriesCount   Int?
   quality       String
   new           Boolean
+  releaseYear   Int
+  actors        String[]
+  genres        String[]
+  duration      String
+  description   String
 }
 

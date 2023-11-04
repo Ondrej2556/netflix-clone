@@ -15,4 +15,9 @@ export interface Movie {
     seriesCount:   number;
     quality:       string;
     new:         boolean;
+    releaseYear: number;
+    actors: string[];
+    genres: string[];
+    duration: string;
+    description: string;
 }

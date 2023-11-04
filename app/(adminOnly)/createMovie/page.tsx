@@ -17,6 +17,11 @@ interface createMovieInterface {
   minAge: number;
   seriesCount: number;
   quality: string;
+  releaseYear: number;
+  actors: string[];
+  duration: string;
+  description: string;
+  genres: string[];
 }
 
 const CreateMovie = () => {
@@ -32,10 +37,15 @@ const CreateMovie = () => {
     movieName: "",
     thumbNailUrl: "",
     properties: [],
+    actors: [],
     match: 0,
     minAge: 0,
     seriesCount: 0,
     quality: "HD",
+    releaseYear: 0,
+    duration: "",
+    description: "",
+    genres: [],
   });
   const [isMovieSelected, setIsMovieSelected] = useState(false);
 
@@ -43,8 +53,8 @@ const CreateMovie = () => {
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    if (name === "properties") {
-      const propertiesArray = value.split(",").map((item) => item.trim());
+    if (name === "properties" || name === "actors" || name === "genres") {
+      const propertiesArray = value.split(",");
       setFormData({
         ...formData,
         [name]: propertiesArray,
@@ -59,6 +69,7 @@ const CreateMovie = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     try {
       const dataToSend = {
         ...formData,
@@ -66,8 +77,9 @@ const CreateMovie = () => {
         match: Number(formData.match),
         minAge: Number(formData.minAge),
         seriesCount: Number(formData.seriesCount),
+        releaseYear: Number(formData.releaseYear),
       };
-       await axios.post("/api/movie", {
+      await axios.post("/api/movie", {
         email: session.user?.email,
         formData: dataToSend,
       });
@@ -96,7 +108,10 @@ const CreateMovie = () => {
           id="categoryId"
           name="categoryId"
           value={formData.categoryId}
-          onChange={(e) => {handleChange(e); setIsMovieSelected(!isMovieSelected)}}
+          onChange={(e) => {
+            handleChange(e);
+            setIsMovieSelected(!isMovieSelected);
+          }}
           required
           className="w-2/3 bg-neutral-700 py-1 rounded-md"
         >
@@ -123,6 +138,36 @@ const CreateMovie = () => {
           className="w-2/3 bg-neutral-700 py-1 rounded-md"
           required
         />
+        <label htmlFor="movieName">Popis: </label>
+        <input
+          type="text"
+          id="description"
+          name="description"
+          value={formData.description}
+          onChange={handleChange}
+          className="w-2/3 bg-neutral-700 py-1 rounded-md"
+          required
+        />
+        <label htmlFor="movieName">Obsazení: </label>
+        <input
+          type="text"
+          id="actors"
+          name="actors"
+          value={formData.actors}
+          onChange={handleChange}
+          className="w-2/3 bg-neutral-700 py-1 rounded-md"
+          required
+        />
+        <label htmlFor="movieName">Žánry: </label>
+        <input
+          type="text"
+          id="genres"
+          name="genres"
+          value={formData.genres}
+          onChange={handleChange}
+          className="w-2/3 bg-neutral-700 py-1 rounded-md"
+          required
+        />
         <label htmlFor="movieName">Vlastnosti: </label>
         <input
           type="text"
@@ -133,6 +178,7 @@ const CreateMovie = () => {
           className="w-2/3 bg-neutral-700 py-1 rounded-md"
           required
         />
+
         <label htmlFor="movieName">Shoda: </label>
         <input
           type="number"
@@ -143,6 +189,28 @@ const CreateMovie = () => {
           className="w-2/3 bg-neutral-700 py-1 rounded-md"
           min={0}
           max={99}
+          required
+        />
+        <label htmlFor="movieName">Rok vydání: </label>
+        <input
+          type="number"
+          id="releaseYear"
+          name="releaseYear"
+          value={formData.releaseYear}
+          onChange={handleChange}
+          className="w-2/3 bg-neutral-700 py-1 rounded-md"
+          min={1940}
+          max={new Date().getFullYear()}
+          required
+        />
+        <label htmlFor="movieName">Doba trvání: </label>
+        <input
+          type="text"
+          id="duration"
+          name="duration"
+          value={formData.duration}
+          onChange={handleChange}
+          className="w-2/3 bg-neutral-700 py-1 rounded-md"
           required
         />
         <label htmlFor="movieName">Minimální věk: </label>
@@ -157,6 +225,7 @@ const CreateMovie = () => {
           max={21}
           required
         />
+
         {!isMovieSelected && (
           <>
             <label htmlFor="movieName">Počet sérií: </label>
@@ -202,3 +271,7 @@ const CreateMovie = () => {
 };
 
 export default CreateMovie;
+
+{
+  /* TODO: ADD DURATION, AND YEAR VYDANI, DESCRIPTION, OBASAZENI */
+}

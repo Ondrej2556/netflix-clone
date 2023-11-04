@@ -51,6 +51,12 @@ export async function POST(req: Request) {
         seriesCount: formData.seriesCount,
         quality: formData.quality,
         new: true,
+        releaseYear: formData.releaseYear,
+        actors: formData.actors,
+        duration: formData.duration,
+        description: formData.description,
+        genres: formData.genres,
+
       },
     });
     if (!movie) {
