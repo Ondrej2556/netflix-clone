@@ -25,6 +25,26 @@ interface loggedNavbarProps {
   setAccount: React.Dispatch<React.SetStateAction<any>>;
 }
 
+const NavigationLink = ({
+  href,
+  text,
+  style,
+}: {
+  href: string;
+  text: string;
+  style: boolean;
+}) => (
+  <Link
+    className={
+      style ? "py-4 hover:bg-neutral-600 transiiton w-full text-center" : ""
+    }
+    href={href}
+  >
+    {text}
+  </Link>
+);
+
+
 const LoggedNavbar: React.FC<loggedNavbarProps> = ({
   userAccounts,
   selectedAccount,
@@ -39,17 +59,17 @@ const LoggedNavbar: React.FC<loggedNavbarProps> = ({
   const [navMenu, setNavMenu] = useState<JSX.Element | null>(null);
   const timeoutRef = useRef<number | NodeJS.Timeout | null>(null);
   const [scrollBg, setScrollBg] = useState(
-    "bg-gradient-to-b from-black to-transparent "
+    "bg-gradient-to-b from-black to-transparent"
   );
 
-    const handleLogout = ()=> {
-      localStorage.removeItem("account")
-      signOut(); 
-      router.push("/")
-      router.refresh()
-      toast.success("Úspěšně odhlášen")
-    }
-  
+  const handleLogout = () => {
+    localStorage.removeItem("account");
+    signOut();
+    router.push("/");
+    router.refresh();
+    toast.success("Úspěšně odhlášen");
+  };
+
   useEffect(() => {
     const updatedNavMenu = mediaQuery ? (
       <div
@@ -62,11 +82,19 @@ const LoggedNavbar: React.FC<loggedNavbarProps> = ({
       </div>
     ) : (
       <>
-        <Link href="/browse">Domovská stránka</Link>
-        <Link href="/series">Pořady</Link>
-        <Link href="/browse">Filmy</Link>
-        <Link href="/browse">Nové a oblíbené</Link>
-        <Link href="/browse">Můj seznam</Link>
+        <NavigationLink href="/browse" text="Domovská stránka" style={false} />
+        <NavigationLink href="/browse/genre/83" text="Pořady" style={false} />
+        <NavigationLink href="/browse/genre/34399" text="Filmy" style={false} />
+        <NavigationLink
+          href="/browse/latest"
+          text="Nové a oblíbené"
+          style={false}
+        />
+        <NavigationLink
+          href="/browse/my-list"
+          text="Můj seznam"
+          style={false}
+        />
       </>
     );
 
@@ -99,6 +127,8 @@ const LoggedNavbar: React.FC<loggedNavbarProps> = ({
       menu === "main" ? setIsMainMenuShown(false) : setIsSecondMenuShown(false);
     }, 200);
   };
+
+
   return (
     <nav
       className={`transition-all duration-150 ease-in-out fixed w-full ${scrollBg} md:text-xs z-50`}
@@ -114,36 +144,31 @@ const LoggedNavbar: React.FC<loggedNavbarProps> = ({
               onMouseLeave={() => setIsMainMenuShown(false)}
               className="absolute border-t-[3px] border-x-[0.1px] border-b-[0.1px] border-white border-x-slate-400 border-b-slate-500 z-10 w-72 flex flex-col items-center top-24 bg-black opacity-90"
             >
-              <Link
-                className="py-4 hover:bg-neutral-600 transiiton w-full text-center"
+              <NavigationLink
                 href="/browse"
-              >
-                Domovská stránka
-              </Link>
-              <Link
-                className="py-4 hover:bg-neutral-600 transiiton w-full text-center"
-                href="/series"
-              >
-                Pořady
-              </Link>
-              <Link
-                className="py-4 hover:bg-neutral-600 transiiton w-full text-center"
-                href="/browse"
-              >
-                Filmy
-              </Link>
-              <Link
-                className="py-4 hover:bg-neutral-600 transiiton w-full text-center"
-                href="/browse"
-              >
-                Nové a oblíbené
-              </Link>
-              <Link
-                className="py-4 hover:bg-neutral-600 transiiton w-full text-center"
-                href="/browse"
-              >
-                Můj seznam
-              </Link>
+                text="Domovská stránka"
+                style={true}
+              />
+              <NavigationLink
+                href="/browse/genre/83"
+                text="Pořady"
+                style={true}
+              />
+              <NavigationLink
+                href="/browse/genre/34399"
+                text="Filmy"
+                style={true}
+              />
+              <NavigationLink
+                href="/browse/latest"
+                text="Nové a oblíbené"
+                style={true}
+              />
+              <NavigationLink
+                href="/browse/my-list"
+                text="Můj seznam"
+                style={true}
+              />
             </div>
           )}
         </div>
@@ -180,7 +205,14 @@ const LoggedNavbar: React.FC<loggedNavbarProps> = ({
                       .map((account) => (
                         <div
                           key={account.id}
-                          onClick={() => {setAccount(account); localStorage.setItem("account", JSON.stringify(account)); router.push("/")}}
+                          onClick={() => {
+                            setAccount(account);
+                            localStorage.setItem(
+                              "account",
+                              JSON.stringify(account)
+                            );
+                            router.push("/");
+                          }}
                           className="flex gap-2 items-center cursor-pointer hover:underline"
                         >
                           <Image
@@ -193,15 +225,15 @@ const LoggedNavbar: React.FC<loggedNavbarProps> = ({
                           <h6>{account.nickname}</h6>
                         </div>
                       ))}
-                      {session?.user?.email==="admin@admin.cz" && (
-                    <div
-                      onClick={() => router.push("/createMovie")}
-                      className="flex gap-2 items-center cursor-pointer hover:underline"
-                    >
-                      <FaPencilAlt size={20} />
-                      <h4>Vytvořit film</h4>
-                    </div>
-                      )}
+                    {session?.user?.email === "admin@admin.cz" && (
+                      <div
+                        onClick={() => router.push("/createMovie")}
+                        className="flex gap-2 items-center cursor-pointer hover:underline"
+                      >
+                        <FaPencilAlt size={20} />
+                        <h4>Vytvořit film</h4>
+                      </div>
+                    )}
                     <div
                       onClick={() => router.push("/")}
                       className="flex gap-2 items-center cursor-pointer hover:underline"

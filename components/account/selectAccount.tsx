@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Loader from "../loader/loader";
 import AccountPicker from "./accountPicker";
 import {Account} from "@/d.types"
+import { useUserStore } from "@/store/userStore";
 
 interface selectAccountProps {
   setAccount:React.Dispatch<React.SetStateAction<any>>;

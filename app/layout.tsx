@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 export const metadata: Metadata = {
   title: 'Netflix - Watch TV Shows Online ',
   description: 'Netlfix Clone',
+  
 }
 
 export default async function RootLayout({

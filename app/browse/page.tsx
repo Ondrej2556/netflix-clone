@@ -16,6 +16,7 @@ import Footer from "@/components/footer";
 const Browse = () => {
   const [selectedAccount, setSelectedAccount] = useState<Account | null>();
   const [userAccounts, setUserAccounts] = useState<Account[] | null>(null);
+  
   const [series, setSeries] = useState<Movie[] | undefined>();
   const [movies, setMovies] = useState<Movie[] | undefined>();
   const [likedMovies, setLikedMovies] = useState<Movie[] | undefined>();
@@ -139,7 +140,7 @@ const Browse = () => {
             </div>
             {likedMovies && (
             <div className="lg:-mt-30 -mt-20">
-              <h1 className="lg:pl-16 pl-4 lg:-mb-36 -mb-24 mt-10 lg:text-3xl">Oblíbené filmy uživatele: {selectedAccount.nickname}</h1>
+              <h1 className="lg:pl-16 pl-4 lg:-mb-36 -mb-24 mt-10 lg:text-3xl">Oblíbené uživatele: {selectedAccount.nickname}</h1>
                 <MovieSlider data={likedMovies} openMovieModal={SetIsMovieModalOpen} selectMovie={setSelectedMovie} user={selectedAccount} />
             </div>
             )}

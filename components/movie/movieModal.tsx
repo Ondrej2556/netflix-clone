@@ -48,7 +48,7 @@ const MovieModal: React.FC<MovieModalProps> = ({
           className={`absolute w-full h-full top-0 bg-black bg-opacity-60 z-50 flex justify-center transition `}
         >
           <div
-            className={`md:fixed md:top-O left-1/2 md:-translate-x-1/2 bg-neutral-900 rounded-md md:my-20 xl:w-2/4 md:w-4/6 w-full transition-all ease-in-out duration-500  ${
+            className={`md:fixed md:top-O left-1/2 md:-translate-x-1/2 bg-neutral-900 rounded-md md:my-10 xl:w-2/4 md:w-4/6 w-full transition-all ease-in-out duration-500  ${
               modalVisible ? "opacity-100" : "opacity-0"
             } md:h-fit h-full`}
           >
@@ -80,7 +80,7 @@ const MovieModal: React.FC<MovieModalProps> = ({
                 </div>
               </div>
             </div>
-            <div className="px-10 flex sm:flex-row flex-col gap-4 lg:text-xl md:text-md text-md pt-6 pb-24">
+            <div className="px-10 flex sm:flex-row flex-col gap-4 lg:text-xl md:text-md text-md pt-6 pb-16">
               <div className="sm:w-2/3 w-full">
                 <div className="flex gap-2 items-center">
                   <h3 className="text-green-500 font-semibold">
@@ -130,7 +130,7 @@ const MovieModal: React.FC<MovieModalProps> = ({
               </div>
             </div>
             {selectedMovie?.categoryId === 1 && (
-              <div className="px-10 flex justify-between pb-36">
+              <div className="px-10 flex justify-between mb-10">
                 <h2 className="text-2xl font-semibold">Díly</h2>
                 <select className="bg-neutral-700 text-xl font-semibold px-4 py-1 rounded-md outline outline-1 outline-zinc-300">
                   {[...Array(selectedMovie.seriesCount)].map((_, index) => (

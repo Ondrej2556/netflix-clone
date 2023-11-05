@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FaPencilAlt } from "react-icons/fa";
 import EditAccount from "./editAccount";
+import { useUserStore } from '@/store/userStore';
 
 interface accountPickerProps {
   imageUrl: string;
@@ -18,6 +19,7 @@ const AccountPicker: React.FC<accountPickerProps> = ({
   setAccount
 }) => {
   const [isEditModalOpen, setIsModalOpen] = useState(false);
+  // const { userAccounts, selectedAccount, setAccount } = useUserStore();
 
   return (
     <>
