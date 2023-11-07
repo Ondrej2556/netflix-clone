@@ -80,7 +80,7 @@ const MovieSlider: React.FC<movieSliderProps> = ({
                 openMovieModal(true);
                 selectMovie(movie);
               }}
-              className={`relative lg:w-72 lg:h-40 w-44 h-24 flex-shrink-0 bg-center bg-cover bg-no-repeat cursor-pointer rounded-md hover:z-10 group transition-all duration-500 ease-in-out `}
+              className={`relative xl:w-72 xl:h-40 w-44 h-24 flex-shrink-0 bg-center bg-cover bg-no-repeat cursor-pointer rounded-md hover:z-10 group transition-all duration-500 ease-in-out `}
               style={{
                 backgroundImage: `url(${movie.thumbNailUrl})`,
                 transform: `translateX(${scrollX}px)`,

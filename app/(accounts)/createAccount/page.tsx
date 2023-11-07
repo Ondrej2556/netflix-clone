@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import AccountForm from "@/components/account/accountForm";
 import { toast } from "react-toastify";
+import TestComponent from "@/components/testComponent";
 
 const CreateAccount = () => {
   const router = useRouter();

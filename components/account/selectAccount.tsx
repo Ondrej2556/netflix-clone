@@ -27,6 +27,7 @@ const SelectAccount: React.FC<selectAccountProps> = ({ setAccount, setUserAccoun
 
     getUserAccounts();
   }, [session]);
+  
   const getUserAccounts = async () => {
     try {
       const accounts = await axios.get("/api/account", {

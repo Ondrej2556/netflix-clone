@@ -21,6 +21,7 @@ const MovieModal: React.FC<MovieModalProps> = ({
 
   useEffect(() => {
     setModalVisible(onMovieOpen);
+    console.log(selectedMovie)
   }, [onMovieOpen]);
 
   const handleClose = () => {
@@ -45,10 +46,10 @@ const MovieModal: React.FC<MovieModalProps> = ({
     <>
       {onMovieOpen && (
         <div
-          className={`absolute w-full h-full top-0 bg-black bg-opacity-60 z-50 flex justify-center transition `}
+        className={`absolute w-full h-full top-0 bg-black bg-opacity-60 z-50 flex justify-center transition `}
         >
           <div
-            className={`md:fixed md:top-O left-1/2 md:-translate-x-1/2 bg-neutral-900 rounded-md md:my-10 xl:w-2/4 md:w-4/6 w-full transition-all ease-in-out duration-500  ${
+            className={`md:fixed md:top-O left-1/2 md:-translate-x-1/2 bg-neutral-900 rounded-md xl:my-10 xl:w-2/4 lg:w-1/2 md:w-4/6 w-full transition-all ease-in-out duration-500  ${
               modalVisible ? "opacity-100" : "opacity-0"
             } md:h-fit h-full`}
           >
@@ -56,20 +57,20 @@ const MovieModal: React.FC<MovieModalProps> = ({
               style={{
                 backgroundImage: `url(${selectedMovie?.thumbNailUrl})`,
               }}
-              className={`relative w-full sm:h-[36rem] aspect-video bg-center bg-cover bg-no-repeat rounded-t-md`}
+              className={`relative w-full md:h-1/3 aspect-video bg-center bg-cover bg-no-repeat rounded-t-md`}
             >
-              <div className="absolute w-full h-full bg-gradient-to-b from-transparent to-neutral-900 flex flex-col justify-end px-10 gap-8 z-50 sm:pb-24">
+              <div className="absolute w-full h-full bg-gradient-to-b from-transparent to-neutral-900 flex flex-col justify-end px-10 gap-8 z-50">
                 <button
                   onClick={handleClose}
-                  className="absolute right-3 top-3  bg-neutral-900/80 rounded-full p-2 text-xl cursor-pointer"
+                  className="absolute right-3 top-3  bg-neutral-900/80 rounded-full px-2 py-1 text-xl cursor-pointer"
                 >
                   ❌
                 </button>
-                <h1 className="sm:text-7xl text-4xl font-semibold ">
+                <h1 className="md:text-7xl text-4xl font-semibold ">
                   {selectedMovie?.movieName}
                 </h1>
                 <div className="flex gap-4">
-                  <button className="flex items-center gap-2 text-2xl bg-white text-black font-bold py-1 px-6 rounded-md">
+                  <button className="flex items-end gap-2 text-2xl bg-white text-black font-bold py-1 px-6 rounded-md">
                     <FaPlay />
                     Přehrát
                   </button>
@@ -80,7 +81,7 @@ const MovieModal: React.FC<MovieModalProps> = ({
                 </div>
               </div>
             </div>
-            <div className="px-10 flex sm:flex-row flex-col gap-4 lg:text-xl md:text-md text-md pt-6 pb-16">
+            <div className="px-10 flex sm:flex-row flex-col gap-4 md:text-md text-md pt-6 pb-16">
               <div className="sm:w-2/3 w-full">
                 <div className="flex gap-2 items-center">
                   <h3 className="text-green-500 font-semibold">
@@ -95,11 +96,11 @@ const MovieModal: React.FC<MovieModalProps> = ({
                 <span className="border-[1px] border-neutral-400 text-neutral-400 px-[4px] leading-none font-semibold mt-1">
                   {selectedMovie?.minAge}+
                 </span>
-                <p className="font-semibold text-left mt-5 text-[16px]">
+                <p className="font-semibold text-left mt-5 md:text-[12px]">
                   {selectedMovie?.description}
                 </p>
               </div>
-              <div className="sm:w-1/3 w-full flex flex-col gap-2 text-[16px]">
+              <div className="sm:w-1/3 w-full flex flex-col gap-2 lg:text-[10px]">
                 <p className="font-semibold">
                   <span className="text-zinc-600">Obsazení: </span>
                   {selectedMovie?.actors.map((item: string, i: number) => (

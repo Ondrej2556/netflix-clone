@@ -130,7 +130,7 @@ const Browse = () => {
             </div>
           </header>
           <main className="relative">
-            <div className="lg:-mt-56 -mt-28">
+            <div className="xl:-mt-56 -mt-28">
               <h1 className="lg:pl-16 pl-4 lg:-mb-36 -mb-24 mt-10 lg:text-3xl">Pořady</h1>
               <MovieSlider data={series} openMovieModal={SetIsMovieModalOpen} selectMovie={setSelectedMovie} user={selectedAccount} />
             </div>
