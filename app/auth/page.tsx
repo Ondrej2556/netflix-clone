@@ -36,14 +36,17 @@ const Auth =  () => {
       
       removeCookie("tempEmail", null)
       try {
-        await signIn("credentials", {
+        const res = await signIn("credentials", {
           email,
           password,
-          redirect: true,
-          callbackUrl: "/browse"
-        })
-      toast.success("Successfull login.")
+          redirect: false,
+      }) 
+      if(res?.error) {
+        toast.error("Špatné přihlašovací údaje.")
+        return;
+      }
 
+      window.location.href = "/browse"
       } catch (error) {
         console.log(error)
       }
@@ -68,9 +71,9 @@ const Auth =  () => {
   return (
     <>
       <main>
-        <div className="bg-[url('/images/hero.jpg')] w-full h-full bg-center bg-cover bg-no-repeat">
+        <div className="bg-[url('/images/hero.jpg')] w-full h-screen bg-center bg-cover bg-no-repeat">
           <Navbar type="auth" />
-          <div className="bg-black h-ful sm:bg-opacity-60 flex items-center justify-center">
+          <div className="bg-black h-full sm:bg-opacity-60 flex items-center justify-center">
             <div className="xl:w-[28rem] sm:w-96 w-full flex items-center flex-col gap-4  p-16 bg-black bg-opacity-70 xl:-mt-10 mt-24 mb-10">
               <div className="flex flex-col gap-3">
                 <h1 className="text-3xl font-semibold pb-6">{isLoginVariant ? "Sign In" : "Sign Up"}</h1>

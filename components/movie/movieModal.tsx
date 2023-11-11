@@ -91,7 +91,7 @@ const MovieModal: React.FC<MovieModalProps> = ({
                 </div>
               </div>
             </div>
-            <div className="px-10 flex sm:flex-row flex-col gap-4 md:text-md text-md pt-6 pb-16">
+            <div className="px-10 flex sm:flex-row flex-col gap-4 text-md pt-6 pb-16">
               <div className="sm:w-2/3 w-full">
                 <div className="flex gap-2 items-center">
                   <h3 className="text-green-500 font-semibold">
