@@ -31,7 +31,7 @@ const MainSection: React.FC<mainSectionProps> = ({
           <h1 className="xl:text-5xl md:text-3xl text-xl font-bold mb-4">{title}</h1>
           <h3 className="xl:text-2xl md:text-xl text-sm lg:mb-0 mb-16">{subTitle}</h3>
         </div>
-        <img src={imageUrl} width={600} height={300} alt={title} />
+        <img src={imageUrl} width={400} height={300} alt={title} />
       </div>
     </>
   );

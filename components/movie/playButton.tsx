@@ -21,7 +21,7 @@ const PlayButton: React.FC<PlaButtonProps> = ({ type, movieId, movieName }) => {
       {type === "long" ? (
         <button 
         onClick={handlePlayClick}
-        className="flex items-center gap-2 text-2xl bg-white text-black font-bold py-2 px-6 rounded-md">
+        className="flex items-center gap-2 lg:text-2xl text-sm bg-white text-black font-bold xl:py-2 py-1 px-6 rounded-md">
           <FaPlay />
           Přehrát
         </button>

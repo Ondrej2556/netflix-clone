@@ -73,7 +73,7 @@ const YourAccount = () => {
         <>
           <LoggedNavbar />
           <main className="bg-white  w-full pt-20 mb-20">
-            <div className="xl:px-16 px-4 pr-6 py-12 h-full">
+            <div className="lg:px-16 px-4 pr-6 py-12 h-full">
               <div className="flex flex-col  xl:w-2/3 w-full mx-auto text-black">
                 <div className="flex gap-3 text-4xl font-semibold items-center">
                   Účet

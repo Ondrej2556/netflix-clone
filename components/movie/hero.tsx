@@ -30,7 +30,7 @@ const Hero:React.FC<HeroProps> = ({title, description, BGimageUrl, LOGOimageUrl,
                   </p>
                   <div className="flex gap-4 mt-2 2xl:text-2xl  lg:text-md  text-sm pb-20 z-20">
                     <PlayButton type="long" movieId={movieId}  movieName={title}/>
-                    <button className="flex items-center gap-2 py-3 px-8 bg-neutral-600 text-white font-semibold rounded-md transition hover:bg-opacity-60">
+                    <button className="flex items-center gap-2 xl:py-2 py-1 px-8 bg-neutral-600 text-white font-semibold rounded-md transition hover:bg-opacity-60">
                       <FaInfoCircle />
                       Další informace
                     </button>

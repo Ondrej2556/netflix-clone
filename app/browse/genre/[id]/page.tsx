@@ -27,7 +27,7 @@ const genreData: { [key: string]: any } = {
     LOGOimageUrl: "/images/loggedHeroTitleMovie.webp",
     title: "Ježek Sonic",
     description:
-    "Sonic se chce mermomocí stát hrdinou. Spojí proto síly s novým kamarádem Tailsem, aby zastavili doktora Robotnika a ježuru Knucklese, kteří chtějí získat mocný smaragd.",
+    "Sonic se chce mermomocí stát hrdinou. Spojí proto síly s novým kamarádem Tailsem, aby zastavili doktora Robotnika a ježuru Knucklese.",
     movieId:"654f6885854ab4ce147997fc"
   },
 };
