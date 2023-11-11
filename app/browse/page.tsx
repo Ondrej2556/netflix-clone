@@ -38,7 +38,7 @@ const Browse = () => {
     if (account) {
       setAccount(JSON.parse(account));
     }
-  }, []);
+  }, [router, session, setAccount]);
 
   useEffect(() => {
     const getSeries = async () => {

@@ -31,27 +31,28 @@ const CreateAccount: React.FC<editAccountProps> = ({
   accountId,
   isEditOpen,
 }) => {
+  const [nickname, setNickname] = useState(name);
+  const [nameError, setNameError] = useState(false);
+  const [isOpen, setIsOpen] = useState(isEditOpen);
   const { reset } = useUserStore();
   const router = useRouter();
   const { data: session } = useSession() as SessionData;
-  if (!session || !session.user) {
-    router.push("/");
-    return null;
-  }
-
   const [profilePic, setProfilePic] = useState(
     imagePath.substring(
       imagePath.indexOf("-") + 1,
       imagePath.indexOf(".", imagePath.indexOf("-") + 1)
     )
   );
-  const [nickname, setNickname] = useState(name);
-  const [nameError, setNameError] = useState(false);
-  const [isOpen, setIsOpen] = useState(isEditOpen);
+  
+    useEffect(() => {
+      setIsOpen(isEditOpen);
+    }, [isEditOpen]);
+    
+  if (!session || !session.user) {
+    router.push("/");
+    return null;
+  }
 
-  useEffect(() => {
-    setIsOpen(isEditOpen);
-  }, [isEditOpen]);
 
   const handleClose = () => {
     setIsOpen(false);

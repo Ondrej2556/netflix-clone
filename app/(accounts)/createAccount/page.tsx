@@ -9,16 +9,16 @@ import { toast } from "react-toastify";
 import { useUserStore } from "@/store/userStore";
 
 const CreateAccount = () => {
+  const [profilePic, setProfilePic] = useState<string>("blue");
+  const [nickname, setNickname] = useState<string>("");
+  const [nameError, setNameError] = useState<boolean>(false);
+  const {reset} = useUserStore()
   const router = useRouter();
   const { data: session } = useSession();
   if (!session || !session.user) {
     router.push("/");
     return;
   }
-  const [profilePic, setProfilePic] = useState<string>("blue");
-  const [nickname, setNickname] = useState<string>("");
-  const [nameError, setNameError] = useState<boolean>(false);
-  const {reset} = useUserStore()
 
   const createProfile = async () => {
     if (nickname.length === 0) {

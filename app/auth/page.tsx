@@ -95,10 +95,10 @@ const Auth =  () => {
                   {isLoginVariant ? "New to Netflix?" : "Already have an account?"}
                   <span 
                   onClick={()=> setIsLoginVariant(!isLoginVariant)}
-                  className="text-white cursor-pointer">{isLoginVariant ? " Sign Up" : " Sign In"}</span>
+                  className="text-white cursor-pointer">{isLoginVariant ? "\u00A0Sign Up" : "\u00A0Sign In"}</span>
                 </p>
                 <p className="text-zinc-500 text-sm">
-                  This page is protected by Google reCAPTCHA to ensure you're
+                  This page is protected by Google reCAPTCHA to ensure youre
                   not a bot. <span className="text-blue-600">Learn more.</span>
                 </p>
               </div>

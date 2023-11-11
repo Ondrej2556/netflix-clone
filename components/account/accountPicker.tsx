@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaPencilAlt } from "react-icons/fa";
 import EditAccount from "./editAccount";
 import { useUserStore } from '@/store/userStore';
+import Image from "next/image";
 
 interface accountPickerProps {
   imageUrl: string;
@@ -31,8 +32,9 @@ const AccountPicker: React.FC<accountPickerProps> = ({
         }
       }}
       className="relative w-24 h-24 flex flex-col items-center hover:text-white cursor-pointer transition">
-        <img
+        <Image
           src={imageUrl}
+          fill
           alt="user1"
           className="rounded-md hover:border-4 transition"
         />

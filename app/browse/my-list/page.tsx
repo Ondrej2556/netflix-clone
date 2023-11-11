@@ -53,7 +53,7 @@ const MyList = () => {
 
       getUserAccounts();
     }
-  }, []);
+  }, [router, session, setAccount, setUserAccounts, userAccounts]);
 
   useEffect(() => {
     if (!selectedAccount) {
@@ -72,7 +72,7 @@ const MyList = () => {
     };
 
     getUserFavoriteMovies();
-  }, [selectedAccount]);
+  }, [selectedAccount, router]);
   
   return (
     <>

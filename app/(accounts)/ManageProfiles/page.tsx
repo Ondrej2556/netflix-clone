@@ -17,7 +17,7 @@ const ManageProfiles = () => {
     setTimeout(()=> {
       setIsOpen(true);
     }, 300)
-  }, [userAccounts]);
+  }, [userAccounts, router]);
 
   return (
     <div className="w-screen h-screen flex flex-col justify-center items-center gap-4 bg-neutral-900 text-neutral-500 ">

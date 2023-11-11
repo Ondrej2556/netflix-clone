@@ -116,7 +116,7 @@ const Genre = ({ params }: { params: { id: string } }) => {
         });
       });
     }
-  }, [movies]);
+  }, [movies, moviesByGenre]);
 
   return (
     <>

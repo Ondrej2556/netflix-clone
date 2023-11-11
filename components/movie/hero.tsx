@@ -1,6 +1,7 @@
 import React from 'react'
 import { FaPlay, FaInfoCircle } from "react-icons/fa";
 import PlayButton from './playButton';
+import Image from 'next/image';
 
 interface HeroProps {
     BGimageUrl: string;
@@ -17,7 +18,9 @@ const Hero:React.FC<HeroProps> = ({title, description, BGimageUrl, LOGOimageUrl,
     className={`w-full lg:h-screen h-full bg-center bg-cover bg-no-repeat`}>
               <div className="bg-black h-full bg-opacity-10 flex justify-left items-start ">
                 <div className=" flex justify-center flex-col  gap-4 lg:mx-16 mx-4 mt-32 lg:w-1/3 sm:w-2/3 ">
-                  <img
+                  <Image
+                  width={300}
+                  height={160}
                     className="max-w-none- "
                     src= {LOGOimageUrl}
                     alt="Hero Title"

@@ -7,6 +7,7 @@ import LoggedNavbar from "@/components/navbar/loggedNavbar";
 import { useUserStore } from "@/store/userStore";
 import axios from "axios";
 import { signOut, useSession } from "next-auth/react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { AiOutlinePlaySquare } from "react-icons/ai";
@@ -47,7 +48,7 @@ const YourAccount = () => {
 
       getUserAccounts();
     }
-  }, [setUserAccounts]);
+  }, [setUserAccounts, router, session, setAccount, userAccounts]);
 
   const handleUserDelete = async () => {
     if(confirm("Opravdu si přejete smazat účet?")){
@@ -132,7 +133,9 @@ const YourAccount = () => {
                     {userAccounts.map((account, i) => (
                       <div key={i}>
                         <div className="flex gap-4 items-center">
-                          <img
+                          <Image
+                            height={10}
+                            width={10}
                             src={account.imageUrl}
                             alt={account.nickname}
                             className="h-14 w-14 rounded-md"

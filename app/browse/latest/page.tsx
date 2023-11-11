@@ -67,7 +67,7 @@ const MyList = () => {
     };
 
     getLatestMovies();
-  }, []);
+  }, [router, session, setAccount, setUserAccounts, userAccounts]);
 
   return (
     <>

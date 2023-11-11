@@ -59,7 +59,7 @@ const Watch = ({
 
       getUserAccounts();
     }
-  }, [setUserAccounts]);
+  }, [setUserAccounts, params,]);
 
   const handleMouseMove = () => {
     if (!mouseMoved) {

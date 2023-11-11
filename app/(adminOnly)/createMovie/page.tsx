@@ -25,13 +25,8 @@ interface createMovieInterface {
 }
 
 const CreateMovie = () => {
+  const [isMovieSelected, setIsMovieSelected] = useState(false);
   const router = useRouter();
-  const { data: session } = useSession();
-
-  if (session?.user?.email !== "admin@admin.cz" || !session || !session.user) {
-    router.push("/");
-    return;
-  }
   const [formData, setFormData] = useState<createMovieInterface>({
     categoryId: 1,
     movieName: "",
@@ -47,7 +42,12 @@ const CreateMovie = () => {
     description: "",
     genres: [],
   });
-  const [isMovieSelected, setIsMovieSelected] = useState(false);
+  const { data: session } = useSession();
+
+  if (session?.user?.email !== "admin@admin.cz" || !session || !session.user) {
+    router.push("/");
+    return;
+  }
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
