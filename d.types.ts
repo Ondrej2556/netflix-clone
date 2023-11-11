@@ -2,6 +2,7 @@ export interface Account {
     imageUrl: string;
     nickname: string;
     id: string;
+    likedMoviesId: string[];
 }
 
 export interface Movie {

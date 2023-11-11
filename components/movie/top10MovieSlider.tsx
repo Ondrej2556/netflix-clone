@@ -5,7 +5,8 @@ import {
   AiOutlineLeft,
 } from "react-icons/ai";
 import Loader from "../loader/loader";
-import MovieCard from "./movieCard";
+import {PiNumberOne} from "react-icons/pi"
+import Top10MovieCard from "./top10MovieCard";
 
 interface movieSliderProps {
   data: Movie[] | undefined;
@@ -13,7 +14,7 @@ interface movieSliderProps {
   selectMovie: React.Dispatch<React.SetStateAction<Movie | null>>;
 }
 
-const MovieSlider: React.FC<movieSliderProps> = ({
+const Top10MovieSlider: React.FC<movieSliderProps> = ({
   data,
   openMovieModal,
   selectMovie,
@@ -57,7 +58,7 @@ const MovieSlider: React.FC<movieSliderProps> = ({
 
   return (
     <div
-      className="flex gap-2 lg:pl-16 pl-4 lg:py-40 py-[114px] overflow-x-auto  scrollbar-hide lg:overflow-hidden overflow-scroll relative"
+      className="flex gap-2 lg:pl-16 pl-4 lg:py-40 py-[114px] overflow-x-auto  scrollbar-hide overflow-scroll relative"
       ref={sliderRef}
       onMouseEnter={() => setIsMoveButtonVisible(true)}
       onMouseLeave={() => setIsMoveButtonVisible(false)}
@@ -67,7 +68,7 @@ const MovieSlider: React.FC<movieSliderProps> = ({
       ) : (
         <>
           {data?.map((movie, i) => (
-            <MovieCard
+            <Top10MovieCard
               key={i}
               i={i}
               movie={movie}
@@ -82,13 +83,13 @@ const MovieSlider: React.FC<movieSliderProps> = ({
                 onClick={() => handleScroll("left")}
                 className={`${
                   scrollX >= 0 ? "hidden" : "visible"
-                } absolute w-14 xl:h-40 h-24 left-0 flex items-center justify-center text-3xl transition bg-black bg-opacity-40 hover:bg-opacity-60 hover:text-4xl cursor-pointer z-40`}
+                } absolute w-14 lg:h-56 h-36 left-0 flex items-center justify-center text-3xl transition bg-black bg-opacity-40 hover:bg-opacity-60 hover:text-4xl cursor-pointer z-40`}
               >
                 <AiOutlineLeft />
               </div>
               <div
                 onClick={() => handleScroll("right")}
-                className="absolute w-14 xl:h-40 h-24 right-0 flex items-center justify-center text-3xl transition bg-black bg-opacity-40 hover:bg-opacity-60 hover:text-4xl cursor-pointer z-40"
+                className="absolute w-14 lg:h-56 h-36 right-0 flex items-center justify-center text-3xl transition bg-black bg-opacity-40 hover:bg-opacity-60 hover:text-4xl cursor-pointer z-40"
               >
                 <AiOutlineRight />
               </div>
@@ -100,4 +101,4 @@ const MovieSlider: React.FC<movieSliderProps> = ({
   );
 };
 
-export default MovieSlider;
+export default Top10MovieSlider;

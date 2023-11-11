@@ -5,44 +5,40 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import Loader from "../loader/loader";
 import AccountPicker from "./accountPicker";
-import {Account} from "@/d.types"
 import { useUserStore } from "@/store/userStore";
 
-interface selectAccountProps {
-  setAccount:React.Dispatch<React.SetStateAction<any>>;
-  setUserAccounts: React.Dispatch<React.SetStateAction<any>>;
-  userAccounts: Account[] | null;
-}
-
-const SelectAccount: React.FC<selectAccountProps> = ({ setAccount, setUserAccounts, userAccounts }) => {
+const SelectAccount = () => {
   const { data: session } = useSession();
-  const [isPickState, setIsPickState] = useState(true);
   const router = useRouter();
+  const { userAccounts, setUserAccounts } = useUserStore();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (!session || !session.user) {
       router.push("/");
       return;
     }
-
-    getUserAccounts();
-  }, [session]);
-  
-  const getUserAccounts = async () => {
-    try {
-      const accounts = await axios.get("/api/account", {
-        params: { userEmail: session?.user?.email },
-      });
-      if (accounts.data === "User has no accounts") {
-        console.log("User has no accounts");
-        setUserAccounts([]);
-        return;
+    const getUserAccounts = async () => {
+      try {
+        const accounts = await axios.get("/api/account", {
+          params: { userEmail: session?.user?.email },
+        });
+        if (accounts.data === "User has no accounts") {
+          setUserAccounts([]);
+          router.push("/browse");
+          return;
+        }
+        setUserAccounts(accounts.data);
+      } catch (error) {
+        console.log(error);
       }
-      setUserAccounts(accounts.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    };
+    getUserAccounts();
+
+    setTimeout(()=> {
+      setIsOpen(true);
+    }, 300)
+  }, [session, setUserAccounts]);
 
   return (
     <main className=" w-screen h-screen flex flex-col justify-center items-center gap-4 bg-neutral-900 text-neutral-500">
@@ -50,76 +46,41 @@ const SelectAccount: React.FC<selectAccountProps> = ({ setAccount, setUserAccoun
         <Loader />
       ) : (
         <>
-          {isPickState ? (
-            <>
-              {userAccounts.length > 0 ? (
-                <>
-                  <h1 className="text-4xl mb-12 text-white text-center">
-                    Kdo se právě dívá?
-                  </h1>
-                  <div className="flex gap-12 justify-center flex-wrap">
-                    {userAccounts.map((account, i) => (
-                      <AccountPicker
-                        key={i}
-                        type="pick"
-                        setAccount={setAccount}
-                        id={account.id}
-                        imageUrl={account.imageUrl}
-                        nickname={account.nickname}
-                      />
-                    ))}
-                  </div>
-                </>
-              ) : (
-                <>
-                  <h1 className="text-5xl text-white">
-                    Pro pokračování si vytvořte účet.
-                  </h1>
-                </>
-              )}
-              <button
-                onClick={() =>
-                  userAccounts.length > 0
-                    ? setIsPickState(false)
-                    : router.push("/createAccount")
-                }
-                className="mt-12 outline outline-1 px-12 py-3 text-2xl hover:text-white hover:outline-white"
-              >
-                {userAccounts.length > 0
-                  ? "Spravovat profily"
-                  : "Vytvořit profil"}
-              </button>
-            </>
-          ) : (
-            <>
-              <h1 className="text-4xl mb-12 text-white">Spravovat profily</h1>
+          {userAccounts.length > 0 ? (
+            <div className={`transition-all ease-in-out duration-300 ${isOpen ? "scale-100 opacity-100" : "scale-150 opacity-0"} flex flex-col items-center`}>
+              <h1 className="text-4xl mb-12 text-white text-center">
+                Kdo se právě dívá?
+              </h1>
               <div className="flex gap-12 justify-center flex-wrap">
                 {userAccounts.map((account, i) => (
                   <AccountPicker
                     key={i}
+                    type="pick"
                     id={account.id}
                     imageUrl={account.imageUrl}
                     nickname={account.nickname}
-                    type="edit"
+                    likedMoviesId={account.likedMoviesId}
                   />
                 ))}
               </div>
-              <div className="flex gap-4">
-              <button 
-              onClick={()=> setIsPickState(true)}
-              className="mt-12 outline outline-1 sm:px-12 px-4 py-3 sm:text-2xl hover:text-white hover:outline-white">
-                Hotovo
-              </button>
-              {userAccounts.length < 5 && (
-              <button 
-              onClick={()=> router.push("/createAccount")}
-              className="mt-12 outline outline-1 sm:px-12 px-4 py-3 sm:text-2xl hover:text-white hover:outline-white">
-                Vytvořit nový účet
-              </button>
-              )}
-              </div>
+            </div>
+          ) : (
+            <>
+              <h1 className="text-5xl text-white">
+                Pro pokračování si vytvořte účet.
+              </h1>
             </>
           )}
+          <button
+            onClick={() =>
+              userAccounts.length > 0
+                ? router.push("/ManageProfiles")
+                : router.push("/createAccount")
+            }
+            className="mt-12 outline outline-1 px-12 py-3 text-2xl hover:text-white hover:outline-white"
+          >
+            {userAccounts.length > 0 ? "Spravovat profily" : "Vytvořit profil"}
+          </button>
         </>
       )}
     </main>

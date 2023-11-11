@@ -1,6 +1,5 @@
-import { PrismaClient } from "@prisma/client";
+import prismadb from "@/lib/prismadb"
 
-const prisma = new PrismaClient();
 
 export async function GET(req: Request) {
   try {
@@ -10,7 +9,7 @@ export async function GET(req: Request) {
     if (!categoryId) {
       throw new Error("Category id missing");
     }
-    const series = await prisma.movie.findMany({
+    const series = await prismadb.movie.findMany({
       take: 20,
       where: {
         categoryId: Number(categoryId),
@@ -30,7 +29,7 @@ export async function POST(req: Request) {
   try {
     const { email, formData } = await req.json();
 
-    const user = await prisma.user.findUnique({
+    const user = await prismadb.user.findUnique({
       where: {
         email,
       },
@@ -40,7 +39,7 @@ export async function POST(req: Request) {
       throw new Error("User is not an admin");
     }
 
-    const movie = await prisma.movie.create({
+    const movie = await prismadb.movie.create({
       data: {
         categoryId: formData.categoryId,
         movieName: formData.movieName,

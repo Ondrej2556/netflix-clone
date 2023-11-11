@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Link from "next/link";
 
 interface logoProps {
   width: number;
@@ -9,13 +9,14 @@ const Logo:React.FC<logoProps> = ({
   height
 }) => {
   return (
-    <Image
+    <Link href="/">
+    <img
       src="/images/logo.png"
       width={width}
       height={height}
       alt="Logo"
-      priority
     />
+    </Link>
   );
 };
 

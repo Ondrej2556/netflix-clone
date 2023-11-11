@@ -1,14 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import AccountForm from "./accountForm";
 import { toast } from "react-toastify";
+import { useUserStore } from "@/store/userStore";
 
 interface editAccountProps {
-  close: any;
+  isEditOpen: boolean;
+  onEditClose: React.Dispatch<React.SetStateAction<boolean>>;
   imagePath: string;
   name: string;
   accountId: string;
@@ -23,23 +25,40 @@ interface SessionData {
 }
 
 const CreateAccount: React.FC<editAccountProps> = ({
-  close,
+  onEditClose,
   imagePath,
   name,
   accountId,
+  isEditOpen,
 }) => {
+  const { reset } = useUserStore();
   const router = useRouter();
-  const { data: session } = useSession() as SessionData; 
+  const { data: session } = useSession() as SessionData;
   if (!session || !session.user) {
     router.push("/");
     return null;
   }
 
   const [profilePic, setProfilePic] = useState(
-    imagePath.substring(imagePath.indexOf("-") + 1, imagePath.indexOf(".", imagePath.indexOf("-") + 1))
+    imagePath.substring(
+      imagePath.indexOf("-") + 1,
+      imagePath.indexOf(".", imagePath.indexOf("-") + 1)
+    )
   );
   const [nickname, setNickname] = useState(name);
   const [nameError, setNameError] = useState(false);
+  const [isOpen, setIsOpen] = useState(isEditOpen);
+
+  useEffect(() => {
+    setIsOpen(isEditOpen);
+  }, [isEditOpen]);
+
+  const handleClose = () => {
+    setIsOpen(false);
+    setTimeout(() => {
+      onEditClose(false);
+    }, 300);
+  };
 
   const editProfile = async () => {
     try {
@@ -50,6 +69,8 @@ const CreateAccount: React.FC<editAccountProps> = ({
         userEmail: session?.user?.email,
       });
       toast.success("Účet upraven");
+      localStorage.removeItem("account");
+      reset();
       router.push("/");
     } catch (error) {
       toast.error("Failed to update account");
@@ -65,28 +86,39 @@ const CreateAccount: React.FC<editAccountProps> = ({
       });
       toast.success("Účet smazán");
       router.push("/");
+      localStorage.removeItem("account");
+      reset();
     } catch (error) {
       toast.error("Failed to delete account");
     }
   };
 
   return (
-    <div className="absolute bg-neutral-800 z-10 flex flex-col gap-4 p-16 top-3 rounded-md lg:right-1/3 sm:right-1/4 right-100">
-      <AccountForm
-        name={nickname}
-        setName={setNickname}
-        profileImage={profilePic}
-        setProfileImage={setProfilePic}
-        title="Upravit profil"
-        formAction={editProfile}
-        formActionLabel="Upravit profil"
-        formSecondAction={deleteAccount}
-        formSecondActionLabel="Smazat účet"
-        nameError={nameError}
-        setNameError={setNameError}
-        closeModal={close}
-      />
-    </div>
+    <>
+      {isEditOpen && (
+        <div
+          className={`absolute sm:-top-1/2 -top-14 right-1/2 translate-x-1/2 w-full z-50 bg-neutral-800 flex flex-col gap-4 p-16 rounded-md
+    transition duration-300 ease-in-out  
+    ${isOpen ? "opacity-100 scale-100" : "opacity-0 scale-75"}
+    `}
+        >
+          <AccountForm
+            name={nickname}
+            setName={setNickname}
+            profileImage={profilePic}
+            setProfileImage={setProfilePic}
+            title="Upravit profil"
+            formAction={editProfile}
+            formActionLabel="Upravit profil"
+            formSecondAction={deleteAccount}
+            formSecondActionLabel="Smazat účet"
+            nameError={nameError}
+            setNameError={setNameError}
+            closeModal={handleClose}
+          />
+        </div>
+      )}
+    </>
   );
 };
 

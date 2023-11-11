@@ -36,7 +36,7 @@ const AccountForm:React.FC<accountFromProps> = ({
     closeModal
 }) => {
   return (
-    <div className="flex flex-col mt-16 gap-4">
+    <div className="flex flex-col mt-16 gap-4 self-center">
       <h1 className="text-4xl">{title}</h1>
       <div className="flex justify-between">
         {profileImages.map((image, i) => (

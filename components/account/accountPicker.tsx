@@ -8,7 +8,7 @@ interface accountPickerProps {
   nickname: string;
   type: string;
   id: string;
-  setAccount?: any;
+  likedMoviesId: string[];
 }
 
 const AccountPicker: React.FC<accountPickerProps> = ({
@@ -16,18 +16,18 @@ const AccountPicker: React.FC<accountPickerProps> = ({
   nickname,
   type,
   id,
-  setAccount
+  likedMoviesId
 }) => {
-  const [isEditModalOpen, setIsModalOpen] = useState(false);
-  // const { userAccounts, selectedAccount, setAccount } = useUserStore();
+  const [isEditModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const { setAccount } = useUserStore();
 
   return (
     <>
       <div 
       onClick={() => {
         if (type === "pick") {
-          setAccount({ id, nickname, imageUrl });
-          localStorage.setItem("account", JSON.stringify({id,nickname,imageUrl}));
+          setAccount({ id, nickname, imageUrl, likedMoviesId });
+          localStorage.setItem("account", JSON.stringify({id,nickname,imageUrl, likedMoviesId}));
         }
       }}
       className="relative w-24 h-24 flex flex-col items-center hover:text-white cursor-pointer transition">
@@ -46,9 +46,7 @@ const AccountPicker: React.FC<accountPickerProps> = ({
           </div>
         )}
       </div>
-      {isEditModalOpen && (
-        <EditAccount close={setIsModalOpen} imagePath={imageUrl} name={nickname} accountId={id}/>
-      )}
+        <EditAccount onEditClose={setIsModalOpen} isEditOpen={isEditModalOpen} imagePath={imageUrl} name={nickname} accountId={id}/>
     </>
   );
 };

@@ -3,10 +3,11 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { FiThumbsDown, FiThumbsUp } from "react-icons/fi";
 import { useRouter } from "next/navigation";
+import { useUserStore } from "@/store/userStore";
 
 interface LikeButtonProps {
-  movieId: string | undefined;
-  userId: string;
+  movieId: string | null;
+  userId: string | null;
   iconSize: number;
 }
 
@@ -15,6 +16,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({ movieId, userId, iconSize }) =>
   const [isHoveringFavorites, setIsHoveringFavorites] = useState<boolean>(showManageFavorites);
   const [ isFavoriteHoverHelpLikeTextVisible, setIsFavoriteHoverHelpLikeTextVisible ] = useState<boolean>(false);
   const [isFavoriteHoverHelpDislikeTextVisible,setIsFavoriteHoverHelpDislikeTextVisible] = useState<boolean>(false);
+  const { setAccount, selectedAccount} = useUserStore()
   const router = useRouter()
 
   useEffect(() => {
@@ -29,7 +31,10 @@ const LikeButton: React.FC<LikeButtonProps> = ({ movieId, userId, iconSize }) =>
         accountId: userId,
         movieId,
       });
-      toast.success(res.data);
+      toast.success(res.status === 201 ? "Added to favories" : "Removed from favorites");
+      localStorage.removeItem("account")
+      setAccount(res.data)
+      localStorage.setItem("account", JSON.stringify(res.data))
       router.push("/")
     } catch (error) {
       toast.error("Something went wrong");

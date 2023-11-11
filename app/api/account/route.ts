@@ -1,13 +1,11 @@
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import prismadb from "@/lib/prismadb"
 
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const email = searchParams.get("userEmail") || undefined;
 
-    const user = await prisma.user.findUnique({
+    const user = await prismadb.user.findUnique({
       where: {
         email,
       },
@@ -16,7 +14,7 @@ export async function GET(req: Request) {
       return new Response("User not found", { status: 404 });
     }
 
-    const userAccounts = await prisma.account.findMany({
+    const userAccounts = await prismadb.account.findMany({
       where: {
         userId: user.id,
       },
@@ -36,7 +34,7 @@ export async function POST(req: Request) {
   try {
     const { email, nickname, imageUrl } = await req.json();
 
-    const user = await prisma.user.findUnique({
+    const user = await prismadb.user.findUnique({
       where: {
         email,
       },
@@ -44,18 +42,19 @@ export async function POST(req: Request) {
     if (!user) {
       return new Response("User not found", { status: 404 });
     }
-    const userAccounts = await prisma.account.findMany({
+    const userAccounts = await prismadb.account.findMany({
       where: { userId: user.id },
     });
 
     if(userAccounts.length === 5) {
       throw new Error("You have already created 5")
     }
-    await prisma.account.create({
+    await prismadb.account.create({
       data: {
         userId: user.id,
         nickname,
         imageUrl,
+        likedMoviesId: []
       },
     });
     return new Response("Account created", { status: 201 });
@@ -69,7 +68,7 @@ export async function DELETE(req: Request) {
     const { searchParams } = new URL(req.url);
     const email = searchParams.get("userEmail") || undefined;
     const accountId = searchParams.get("accountId") || undefined;
-    const user = await prisma.user.findUnique({
+    const user = await prismadb.user.findUnique({
       where: {
         email,
       },
@@ -78,7 +77,7 @@ export async function DELETE(req: Request) {
       return new Response("User not found", { status: 404 });
     }
     
-    const accountToBeDeleted = await prisma.account.findUnique({
+    const accountToBeDeleted = await prismadb.account.findUnique({
       where: {
         id: accountId
       }
@@ -87,7 +86,7 @@ export async function DELETE(req: Request) {
       throw new Error("Account not found!")
     }
 
-    await prisma.account.delete({
+    await prismadb.account.delete({
       where: {
         id: accountId
       }
@@ -102,7 +101,7 @@ export async function DELETE(req: Request) {
 export async function PUT(req: Request) {
   try {
     const { userEmail, nickname, imageUrl, accountId } = await req.json();
-    const user = await prisma.user.findUnique({
+    const user = await prismadb.user.findUnique({
       where: {
         email: userEmail
       },
@@ -110,7 +109,7 @@ export async function PUT(req: Request) {
     if (!user) {
       return new Response("User not found", { status: 404 });
     }
-    const updateAccount = await prisma.account.update({
+    const updateAccount = await prismadb.account.update({
       where: {
         id: accountId,
       },

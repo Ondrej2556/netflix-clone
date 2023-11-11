@@ -1,7 +1,5 @@
-import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
-
-const prisma = new PrismaClient();
+import prismadb from "@/lib/prismadb"
 
 
 export async function POST(req: Request, res: Response) {
@@ -9,7 +7,7 @@ export async function POST(req: Request, res: Response) {
        const {email, name, password} = await req.json()
         console.log(email, name, password)
 
-        const existingUser = await prisma.user.findUnique({
+        const existingUser = await prismadb.user.findUnique({
             where:{
                 email
             }
@@ -20,7 +18,7 @@ export async function POST(req: Request, res: Response) {
 
         const hashedPassword = await bcrypt.hash(password, 12)
 
-        const user = await prisma.user.create({
+        const user = await prismadb.user.create({
             data:{
                 email,
                 name,

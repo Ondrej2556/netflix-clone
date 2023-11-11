@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import AccountForm from "@/components/account/accountForm";
 import { toast } from "react-toastify";
-import TestComponent from "@/components/testComponent";
+import { useUserStore } from "@/store/userStore";
 
 const CreateAccount = () => {
   const router = useRouter();
@@ -18,6 +18,7 @@ const CreateAccount = () => {
   const [profilePic, setProfilePic] = useState<string>("blue");
   const [nickname, setNickname] = useState<string>("");
   const [nameError, setNameError] = useState<boolean>(false);
+  const {reset} = useUserStore()
 
   const createProfile = async () => {
     if (nickname.length === 0) {
@@ -32,7 +33,9 @@ const CreateAccount = () => {
         email: session?.user?.email,
       });
       toast.success("Účet vytvořen");
-      router.push("/browse");
+      router.push("/");
+      localStorage.removeItem("account");
+      reset();
     } catch (error) {
       console.log(error);
     }

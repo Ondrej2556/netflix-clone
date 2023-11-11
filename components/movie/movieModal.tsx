@@ -1,27 +1,27 @@
 import { useEffect, useState } from "react";
 import { FaPlay } from "react-icons/fa";
-import { AiOutlinePlus } from "react-icons/ai";
-import { Movie, Account } from "@/d.types";
+import { Movie } from "@/d.types";
 import LikeButton from "./likeButton";
+import { useUserStore } from "@/store/userStore";
+import AddToListButton from "./addToList.Button";
+import PlayButton from "./playButton";
 
 interface MovieModalProps {
   closeMovieModal: React.Dispatch<React.SetStateAction<boolean>>;
   onMovieOpen: boolean;
   selectedMovie: Movie | null;
-  user: Account;
 }
 
 const MovieModal: React.FC<MovieModalProps> = ({
   closeMovieModal,
   onMovieOpen,
   selectedMovie,
-  user,
 }) => {
   const [modalVisible, setModalVisible] = useState(onMovieOpen);
+  const { selectedAccount } = useUserStore();
 
   useEffect(() => {
     setModalVisible(onMovieOpen);
-    console.log(selectedMovie)
   }, [onMovieOpen]);
 
   const handleClose = () => {
@@ -44,40 +44,50 @@ const MovieModal: React.FC<MovieModalProps> = ({
 
   return (
     <>
-      {onMovieOpen && (
+      {onMovieOpen && selectedMovie && selectedAccount && (
         <div
-        className={`absolute w-full h-full top-0 bg-black bg-opacity-60 z-50 flex justify-center transition `}
+          className={`absolute w-full h-full top-0 bg-black bg-opacity-60 z-50 flex justify-center transition `}
         >
           <div
-            className={`md:fixed md:top-O left-1/2 md:-translate-x-1/2 bg-neutral-900 rounded-md xl:my-10 xl:w-2/4 lg:w-1/2 md:w-4/6 w-full transition-all ease-in-out duration-500  ${
+            className={`fixed top-O left-1/2 -translate-x-1/2 bg-neutral-900 rounded-md xl:my-10 xl:w-2/4 lg:w-1/2 md:w-4/6 w-full transition-all ease-in-out duration-500  ${
               modalVisible ? "opacity-100" : "opacity-0"
             } md:h-fit h-full`}
           >
             <div
               style={{
-                backgroundImage: `url(${selectedMovie?.thumbNailUrl})`,
+                backgroundImage: `url(${selectedMovie.thumbNailUrl})`,
               }}
               className={`relative w-full md:h-1/3 aspect-video bg-center bg-cover bg-no-repeat rounded-t-md`}
             >
               <div className="absolute w-full h-full bg-gradient-to-b from-transparent to-neutral-900 flex flex-col justify-end px-10 gap-8 z-50">
                 <button
                   onClick={handleClose}
-                  className="absolute right-3 top-3  bg-neutral-900/80 rounded-full px-2 py-1 text-xl cursor-pointer"
+                  className="absolute right-3 top-3  bg-neutral-900/80 rounded-full px-2 xl:py-2 py-1 text-xl cursor-pointer"
                 >
                   ❌
                 </button>
                 <h1 className="md:text-7xl text-4xl font-semibold ">
-                  {selectedMovie?.movieName}
+                  {selectedMovie.movieName}
                 </h1>
-                <div className="flex gap-4">
-                  <button className="flex items-end gap-2 text-2xl bg-white text-black font-bold py-1 px-6 rounded-md">
-                    <FaPlay />
-                    Přehrát
-                  </button>
-                  <span className="rounded-full text-center outline outline-zinc-700 hover:outline-white p-2 cursor-pointer">
-                    <AiOutlinePlus size={30} />
-                  </span>
-                  <LikeButton movieId={selectedMovie?.id} userId={user.id} iconSize={30} />
+                <div className="flex gap-4 items-center">
+                  <PlayButton type="long" movieId={selectedMovie.id} movieName={selectedMovie.movieName}/>
+                  <AddToListButton
+                    type={
+                      selectedAccount.likedMoviesId.includes(
+                        selectedMovie.id
+                      )
+                        ? "remove"
+                        : "add"
+                    }
+                    movieId={selectedMovie.id}
+                    userId={selectedAccount.id}
+                    size={30}
+                  />
+                  <LikeButton
+                    movieId={selectedMovie.id}
+                    userId={selectedAccount.id}
+                    iconSize={30}
+                  />
                 </div>
               </div>
             </div>
@@ -85,52 +95,58 @@ const MovieModal: React.FC<MovieModalProps> = ({
               <div className="sm:w-2/3 w-full">
                 <div className="flex gap-2 items-center">
                   <h3 className="text-green-500 font-semibold">
-                    {selectedMovie?.match}% shoda
+                    {selectedMovie.match}% shoda
                   </h3>
-                  <h3 className="text-neutral-400 font-semibold">{selectedMovie?.releaseYear}</h3>
-                  <h3 className="text-neutral-400 font-semibold">{selectedMovie?.categoryId === 1 ? `${selectedMovie?.seriesCount} řad` : selectedMovie?.duration}</h3>
+                  <h3 className="text-neutral-400 font-semibold">
+                    {selectedMovie.releaseYear}
+                  </h3>
+                  <h3 className="text-neutral-400 font-semibold">
+                    {selectedMovie.categoryId === 1
+                      ? `${selectedMovie.seriesCount} řad`
+                      : selectedMovie.duration}
+                  </h3>
                   <h3 className="border-[1px] border-neutral-400  font-sm rounded-sm px-[1px] leading-none">
-                    {selectedMovie?.quality}
+                    {selectedMovie.quality}
                   </h3>
                 </div>
                 <span className="border-[1px] border-neutral-400 text-neutral-400 px-[4px] leading-none font-semibold mt-1">
-                  {selectedMovie?.minAge}+
+                  {selectedMovie.minAge}+
                 </span>
-                <p className="font-semibold text-left mt-5 md:text-[12px]">
-                  {selectedMovie?.description}
+                <p className="font-semibold text-left mt-5 xl:text-[16px] md:text-[12px]">
+                  {selectedMovie.description}
                 </p>
               </div>
-              <div className="sm:w-1/3 w-full flex flex-col gap-2 lg:text-[10px]">
+              <div className="sm:w-1/3 w-full flex flex-col gap-2 xl:text-[16px] lg:text-[10px]">
                 <p className="font-semibold">
                   <span className="text-zinc-600">Obsazení: </span>
-                  {selectedMovie?.actors.map((item: string, i: number) => (
+                  {selectedMovie.actors.map((item: string, i: number) => (
                     <i key={i}>
                       {item}
-                      {i !== selectedMovie?.actors.length - 1 && <>, </>}
+                      {i !== selectedMovie.actors.length - 1 && <>, </>}
                     </i>
                   ))}
                 </p>
                 <p className="font-semibold">
                   <span className="text-zinc-600">Žánry: </span>
-                  {selectedMovie?.genres.map((item: string, i: number) => (
+                  {selectedMovie.genres.map((item: string, i: number) => (
                     <i key={i}>
                       {item}
-                      {i !== selectedMovie?.genres.length - 1 && <>, </>}
+                      {i !== selectedMovie.genres.length - 1 && <>, </>}
                     </i>
                   ))}
                 </p>
                 <p className="font-semibold">
                   <span className="text-zinc-600">Tenhle film je: </span>
-                  {selectedMovie?.properties.map((item: string, i: number) => (
+                  {selectedMovie.properties.map((item: string, i: number) => (
                     <i key={i}>
                       {item}
-                      {i !== selectedMovie?.properties.length - 1 && <>, </>}
+                      {i !== selectedMovie.properties.length - 1 && <>, </>}
                     </i>
                   ))}
                 </p>
               </div>
             </div>
-            {selectedMovie?.categoryId === 1 && (
+            {selectedMovie.categoryId === 1 && (
               <div className="px-10 flex justify-between mb-10">
                 <h2 className="text-2xl font-semibold">Díly</h2>
                 <select className="bg-neutral-700 text-xl font-semibold px-4 py-1 rounded-md outline outline-1 outline-zinc-300">

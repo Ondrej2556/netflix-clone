@@ -3,9 +3,7 @@ import type { NextAuthOptions } from "next-auth"
 import { getServerSession } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials";
 import { compare } from "bcrypt";
-import { PrismaClient } from "@prisma/client";;
-
-const prisma = new PrismaClient();
+import prismadb from "@/lib/prismadb"
 
 export const config = {
     providers: [
@@ -19,7 +17,7 @@ export const config = {
             if (!credentials?.email || !credentials?.password) {
               throw new Error("Email and password required");
             }
-            const user = await prisma.user.findUnique({
+            const user = await prismadb.user.findUnique({
               where: {
                 email: credentials.email,
               },
@@ -53,6 +51,7 @@ export const config = {
         secret: process.env.NEXTAUTH_JWT_SECRET,
       },
       secret: process.env.NEXTAUTH_SECRET,
+      
 } satisfies NextAuthOptions
 
 // Use it in server contexts

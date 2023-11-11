@@ -1,20 +1,18 @@
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import prismadb from "@/lib/prismadb"
 
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get("userId") || undefined;
 
-    const account = await prisma.account.findUnique({
+    const account = await prismadb.account.findUnique({
       where: { id: userId },
     });
 
     if (account?.likedMoviesId.length === 0) {
       return new Response(null);
     }
-    const movies = await prisma.movie.findMany({
+    const movies = await prismadb.movie.findMany({
       take: 20,
       where: {
         id: {
@@ -41,7 +39,7 @@ export async function PUT(req: Request) {
       throw new Error("Invalid data provided");
     }
 
-    const account = await prisma.account.findUnique({
+    const account = await prismadb.account.findUnique({
       where: {
         id: accountId,
       },
@@ -52,7 +50,8 @@ export async function PUT(req: Request) {
     }
 
     if (account.likedMoviesId.includes(movieId)) {
-      await prisma.account.update({
+      //remove item
+      const updatedAccount = await prismadb.account.update({
         where: {
           id: accountId,
         },
@@ -62,9 +61,10 @@ export async function PUT(req: Request) {
           },
         },
       });
-      return new Response("Movie removed from favorites", { status: 200 });
+      return Response.json(updatedAccount, { status: 200 });
     } else {
-      await prisma.account.update({
+      //like item
+      const updatedAccount = await prismadb.account.update({
         where: {
           id: accountId,
         },
@@ -74,7 +74,7 @@ export async function PUT(req: Request) {
           },
         },
       });
-      return new Response("Movie added to favorites", { status: 200 });
+      return Response.json(updatedAccount, { status: 201 });
     }
   } catch (error) {
     console.log(error);
