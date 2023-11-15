@@ -3,6 +3,7 @@ import { FaPencilAlt } from "react-icons/fa";
 import EditAccount from "./editAccount";
 import { useUserStore } from '@/store/userStore';
 import Image from "next/image";
+import { movieRating } from "@/d.types";
 
 interface accountPickerProps {
   imageUrl: string;
@@ -10,6 +11,7 @@ interface accountPickerProps {
   type: string;
   id: string;
   likedMoviesId: string[];
+  movieRating: movieRating[];
 }
 
 const AccountPicker: React.FC<accountPickerProps> = ({
@@ -17,7 +19,8 @@ const AccountPicker: React.FC<accountPickerProps> = ({
   nickname,
   type,
   id,
-  likedMoviesId
+  likedMoviesId,
+  movieRating
 }) => {
   const [isEditModalOpen, setIsModalOpen] = useState<boolean>(false);
   const { setAccount } = useUserStore();
@@ -27,14 +30,15 @@ const AccountPicker: React.FC<accountPickerProps> = ({
       <div 
       onClick={() => {
         if (type === "pick") {
-          setAccount({ id, nickname, imageUrl, likedMoviesId });
-          localStorage.setItem("account", JSON.stringify({id,nickname,imageUrl, likedMoviesId}));
+          setAccount({ id, nickname, imageUrl, likedMoviesId, movieRating });
+          localStorage.setItem("account", JSON.stringify({id,nickname,imageUrl, likedMoviesId, movieRating}));
         }
       }}
-      className="relative w-24 h-24 flex flex-col items-center hover:text-white cursor-pointer transition">
+      className="relative w-24 flex flex-col items-center hover:text-white cursor-pointer transition">
         <Image
           src={imageUrl}
-          fill
+          height={94}
+          width={94}
           alt="user1"
           className="rounded-md hover:border-4 transition"
         />
@@ -42,7 +46,7 @@ const AccountPicker: React.FC<accountPickerProps> = ({
         {type === "edit" && (
           <div
             onClick={() => setIsModalOpen(true)}
-            className="absolute w-full h-full bg-black bg-opacity-30 flex items-center justify-center hover:border-2"
+            className="absolute w-full h-[94px] bg-black bg-opacity-30 flex items-center justify-center hover:border-2"
           >
             <FaPencilAlt size={30} className="text-white" />
           </div>

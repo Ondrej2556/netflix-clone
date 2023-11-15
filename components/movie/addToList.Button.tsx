@@ -27,11 +27,11 @@ const AddToListButton: React.FC<AddToListButtonProps> = ({
   const handleLike = async (e: React.MouseEvent) => {
     e.stopPropagation();
     try {
-      const res = await axios.put("/api/account/movie/favorites", {
+      const res = await axios.put("/api/account/movie/list", {
         accountId: userId,
         movieId,
       });
-      toast.success(res.status === 201 ? "Added to favories" : "Removed from favorites");
+      toast.success(res.status === 201 ? "Přidáno na Váš seznam" : "Odebráno z Vašeho seznamu");
       localStorage.removeItem("account")
       setAccount(res.data)
       localStorage.setItem("account", JSON.stringify(res.data))

@@ -29,14 +29,14 @@ const YourAccountSection:React.FC<YourAccountSectionProps> = ({
         </button>
         )} 
       </div>
-      <div className="flex flex-col flex-1">
-        <div className="flex justify-between ">
-          <div>
+      <div className="flex flex-col flex-1 w-full justify-between">
+        <div className="flex justify-between flex-1 gap-5">
+          <div className="w-2/3">
         {leftData.map((data, i) => (
             <h3 key={i}>{data}</h3>
         ))}
           </div>
-          <div className="text-blue-500 font-semibold cursor-pointer">
+          <div className="w-1/3 text-blue-500 font-semibold cursor-not-allowed">
             {rightData.map((data, i) => (
                 <h3 key={i} className="hover:underline">{data}</h3>
             ))}

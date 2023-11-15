@@ -1,4 +1,6 @@
-import prismadb from "@/lib/prismadb"
+import prismadb from "@/lib/prismadb";
+import { Prisma } from "@prisma/client";
+import { movieRating } from "@/d.types";
 
 export async function GET(req: Request) {
   try {
@@ -9,14 +11,17 @@ export async function GET(req: Request) {
       where: { id: userId },
     });
 
-    if (account?.likedMoviesId.length === 0) {
+    if (!account || account.movieRating.length === 0) {
       return new Response(null);
     }
+
+    const accountMovieIds = (account.movieRating as unknown as  movieRating[]).map((rating) => rating.movieId)
+
     const movies = await prismadb.movie.findMany({
       take: 20,
       where: {
         id: {
-          in: account?.likedMoviesId,
+          in: accountMovieIds, 
         },
       },
     });
@@ -34,7 +39,7 @@ export async function GET(req: Request) {
 
 export async function PUT(req: Request) {
   try {
-    const { accountId, movieId } = await req.json();
+    const { accountId, movieId, value } = await req.json();
     if (!accountId || !movieId) {
       throw new Error("Invalid data provided");
     }
@@ -49,33 +54,49 @@ export async function PUT(req: Request) {
       throw new Error("Account not found");
     }
 
-    if (account.likedMoviesId.includes(movieId)) {
-      //remove item
-      const updatedAccount = await prismadb.account.update({
-        where: {
-          id: accountId,
-        },
-        data: {
-          likedMoviesId: {
-            set: account.likedMoviesId.filter((id) => id !== movieId),
-          },
-        },
-      });
-      return Response.json(updatedAccount, { status: 200 });
+    //value = dislike, like, superlike, unset
+
+
+    //IF movieId does not exist create new record with id and value
+    //If movieId exists in the movieRating -> update the value ||
+    //delete the whole object if value = "unset"
+
+    const existingMovieRatings: movieRating[] =
+      (account.movieRating as unknown[] as movieRating[]) || [];
+
+    const index = existingMovieRatings.findIndex(
+      (rating) => rating.movieId === movieId
+    );
+
+    if (index !== -1) {
+      if (existingMovieRatings[index].movieRating === value) {
+        // If value is the same, remove the whole object from the array
+        existingMovieRatings.splice(index, 1);
+      } else {
+        // Otherwise, update the value
+        existingMovieRatings[index].movieRating = value;
+      }
     } else {
-      //like item
-      const updatedAccount = await prismadb.account.update({
-        where: {
-          id: accountId,
-        },
-        data: {
-          likedMoviesId: {
-            push: movieId,
-          },
-        },
-      });
-      return Response.json(updatedAccount, { status: 201 });
+      // If movieId doesn't exist, create a new record
+      const movieRating: movieRating = {
+        movieId,
+        movieRating: value,
+      };
+      existingMovieRatings.push(movieRating);
     }
+
+    const updatedAccount = await prismadb.account.update({
+      where: {
+        id: accountId,
+      },
+      data: {
+        movieRating: {
+          set: existingMovieRatings as unknown[] as Prisma.InputJsonValue[],
+        },
+      },
+    });
+
+    return Response.json(updatedAccount, { status: 201 });
   } catch (error) {
     console.log(error);
     return new Response("Internal Server Error", { status: 500 });

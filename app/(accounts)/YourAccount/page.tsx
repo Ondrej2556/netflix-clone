@@ -51,21 +51,20 @@ const YourAccount = () => {
   }, [setUserAccounts, router, session, setAccount, userAccounts]);
 
   const handleUserDelete = async () => {
-    if(confirm("Opravdu si přejete smazat účet?")){
-      
+    if (confirm("Opravdu si přejete smazat účet?")) {
       try {
-        await axios.delete("/api/user",{
-          params:{email: session?.user?.email}
-        })
-        toast.success("Účet smazán")
-        signOut()
-        localStorage.removeItem("account")
-        router.push("/")
+        await axios.delete("/api/user", {
+          params: { email: session?.user?.email },
+        });
+        toast.success("Účet smazán");
+        signOut();
+        localStorage.removeItem("account");
+        router.push("/");
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     }
-  }
+  };
   return (
     <>
       {!userAccounts || !session ? (
@@ -76,19 +75,20 @@ const YourAccount = () => {
           <main className="bg-white  w-full pt-20 mb-20">
             <div className="lg:px-16 px-4 pr-6 py-12 h-full">
               <div className="flex flex-col  xl:w-2/3 w-full mx-auto text-black">
-                <div className="flex gap-3 text-4xl font-semibold items-center">
-                  Účet
-                  <span className="text-sm text-neutral-700 flex items-center">
-                    <AiOutlinePlaySquare className="text-red-500" size={24} />{" "}
-                    Členem od: srpen 2020
-                  </span>
+                <div className="flex items-center gap-3 text-4xl font-semibold ">
+                  <AiOutlinePlaySquare className="text-red-500" />
+                  Účet: {session.user?.name}
                 </div>
                 <hr className="w-full  border-neutral-400 mt-4" />
                 <YourAccountSection
                   title="ČLENSTVÍ A FAKTURACE"
                   buttonTitle="Zručit členství"
                   buttonAction={handleUserDelete}
-                  leftData={[`E-mail: ${session.user?.email}`, "Heslo: XXXXXXXX", "Telefon: Není"]}
+                  leftData={[
+                    `E-mail: ${session.user?.email}`,
+                    "Heslo: XXXXXXXX",
+                    "Telefon: Není",
+                  ]}
                   rightData={[
                     "Změnit e-mail účtu",
                     "Změnit heslo",

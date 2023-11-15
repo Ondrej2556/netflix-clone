@@ -19,6 +19,7 @@ const MyList = () => {
     useUserStore();
 
   const [movies, setMovies] = useState<Movie[] | undefined>();
+  const [favoriteMovies, setFavoritesMovies] = useState<Movie[] | undefined>();
   const [isMovieModalOpen, SetIsMovieModalOpen] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
 
@@ -58,17 +59,35 @@ const MyList = () => {
     const getLatestMovies = async () => {
       try {
         const series = await axios.get("/api/movie/latest", {
-          params: {take: 30}
+          params: { take: 30 },
         });
         setMovies(series.data);
       } catch (error) {
         console.log(error);
       }
     };
-
     getLatestMovies();
   }, [router, session, setAccount, setUserAccounts, userAccounts]);
 
+
+  useEffect(() => {
+    if (!selectedAccount) {
+      router.push("/browse")
+      return;
+    }
+    const getUserFavoriteMovies = async () => {
+      try {
+        const series = await axios.get("/api/account/movie/favorites", {
+          params: { userId: selectedAccount.id },
+        });
+        setFavoritesMovies(series.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getUserFavoriteMovies();
+  }, [selectedAccount, router]);
   return (
     <>
       {!session || !selectedAccount ? (
@@ -89,12 +108,24 @@ const MyList = () => {
                 selectMovie={setSelectedMovie}
               />
             </div>
+            {favoriteMovies && (
+              <div>
+                <h1 className="lg:pl-16 pl-4 lg:-mb-36 -mb-24 mt-10 lg:text-3xl">
+                  Vámi hodnocené filmy
+                </h1>
+                <MovieSlider
+                  data={favoriteMovies}
+                  openMovieModal={SetIsMovieModalOpen}
+                  selectMovie={setSelectedMovie}
+                />
+              </div>
+            )}
             <div>
               <h1 className="lg:pl-16 pl-4 lg:-mb-36 -mb-24 lg:text-3xl">
                 Top 10 filmů v téhle zemi: Česko
               </h1>
               <Top10MovieSlider
-                data={movies?.slice(0,10).reverse()}
+                data={movies?.slice(0, 10).reverse()}
                 openMovieModal={SetIsMovieModalOpen}
                 selectMovie={setSelectedMovie}
               />

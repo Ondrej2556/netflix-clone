@@ -54,11 +54,13 @@ export async function POST(req: Request) {
         userId: user.id,
         nickname,
         imageUrl,
-        likedMoviesId: []
+        likedMoviesId: [],
+        movieRating: [],
       },
     });
     return new Response("Account created", { status: 201 });
   } catch (error) {
+    console.log(error)
     return new Response("Internal Server Error", { status: 500 });
   }
 }

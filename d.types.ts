@@ -1,8 +1,14 @@
+export interface movieRating {
+    movieId: string;
+    movieRating: "dislike" | "like" | "superlike" | "unset";
+}
+
 export interface Account {
     imageUrl: string;
     nickname: string;
     id: string;
     likedMoviesId: string[];
+    movieRating: movieRating[];
 }
 
 export interface Movie {

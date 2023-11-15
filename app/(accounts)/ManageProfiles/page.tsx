@@ -33,6 +33,7 @@ const ManageProfiles = () => {
                 nickname={account.nickname}
                 type="edit"
                 likedMoviesId={account.likedMoviesId}
+                movieRating={account.movieRating}
               />
             ))}
           </div>

@@ -62,7 +62,7 @@ const MyList = () => {
     }
     const getUserFavoriteMovies = async () => {
       try {
-        const series = await axios.get("/api/account/movie/favorites", {
+        const series = await axios.get("/api/account/movie/list", {
           params: { userId: selectedAccount.id },
         });
         setMovies(series.data);

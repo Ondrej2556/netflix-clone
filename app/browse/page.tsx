@@ -67,7 +67,7 @@ const Browse = () => {
     }
     const getLikedMovies = async () => {
       try {
-        const series = await axios.get("/api/account/movie/favorites", {
+        const series = await axios.get("/api/account/movie/list", {
           params: { userId: selectedAccount.id },
         });
         setLikedMovies(series.data);
