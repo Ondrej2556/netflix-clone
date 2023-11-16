@@ -14,10 +14,12 @@ export default function Home() {
   const { data: session } = useSession();
   const router = useRouter();
 
-  // Redirect to "/browse" if the user is logged in
-  if (session) {
-    router.push("/browse"); 
-  }
+  useEffect(()=> {
+    // Redirect to "/browse" if the user is logged in
+    if (session) {
+      router.push("/browse"); 
+    }  
+  },[session, router]);
 
   return (
     <>

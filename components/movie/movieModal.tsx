@@ -62,7 +62,7 @@ const MovieModal: React.FC<MovieModalProps> = ({
               <div className="absolute w-full h-full bg-gradient-to-b from-transparent to-neutral-900 flex flex-col justify-end px-10 gap-8 z-50">
                 <button
                   onClick={handleClose}
-                  className="absolute right-3 top-3  bg-neutral-900/80 rounded-full px-2 xl:py-2 py-1 text-xl cursor-pointer"
+                  className="absolute right-3 top-3  bg-neutral-900/80 rounded-full xl:px-2 px-1 xl:py-2 py-1 text-xl cursor-pointer"
                 >
                   ❌
                 </button>

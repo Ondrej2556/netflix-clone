@@ -6,7 +6,6 @@ import { BsFillHandThumbsDownFill, BsFillHandThumbsUpFill  } from "react-icons/b
 import { AiFillHeart } from "react-icons/ai";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/userStore";
-import { FaThumbsDown } from "react-icons/fa";
 
 interface LikeButtonProps {
   movieId: string | null;
@@ -35,34 +34,26 @@ const LikeButton: React.FC<LikeButtonProps> = ({
   userId,
   iconSize,
 }) => {
-  const [favoritesState, setFavoritesState] = useState({
-    showManageFavorites: false,
-    isHoveringFavorites: false,
-    isFavoriteHoverHelpLikeTextVisible: false,
-    isFavoriteHoverHelpDislikeTextVisible: false,
-    isFavoriteHoverHelpExtralikeTextVisible: false,
-  });
+  const [showManageFavorites, setShowManageFavorites] = useState<boolean>(false);
+  const [isHoveringFavorites, setIsHoveringFavorites] = useState<boolean>(showManageFavorites);
+  const [ isFavoriteHoverHelpLikeTextVisible, setIsFavoriteHoverHelpLikeTextVisible ] = useState<boolean>(false);
+  const [isFavoriteHoverHelpDislikeTextVisible,setIsFavoriteHoverHelpDislikeTextVisible] = useState<boolean>(false);
+  const [isFavoriteHoverHelpExtralikeTextVisible,setIsFavoriteHoverHelpExtralikeTextVisible] = useState<boolean>(false);
 
   const { setAccount, selectedAccount } = useUserStore();
   const router = useRouter();
 
   useEffect(() => {
-    setTimeout(
-      () =>
-        setFavoritesState({
-          ...favoritesState,
-          isHoveringFavorites: favoritesState.showManageFavorites,
-        }),
-      100
-    );
-  }, [favoritesState.showManageFavorites, setFavoritesState]);
+    setTimeout(()=> setIsHoveringFavorites(showManageFavorites), 100)
+
+  }, [showManageFavorites]);
 
   const handleLike = async (
     e: React.MouseEvent,
     type: "like" | "dislike" | "superlike" | "unset"
   ) => {
     e.stopPropagation();
-    console.log(type);
+ 
     //like, dislike or superlike it - then based on it display icon
     try {
       const res = await axios.put("/api/account/movie/favorites", {
@@ -80,12 +71,8 @@ const LikeButton: React.FC<LikeButtonProps> = ({
   };
   return (
     <span
-      onMouseEnter={() =>
-        setFavoritesState({ ...favoritesState, showManageFavorites: true })
-      }
-      onMouseLeave={() =>
-        setFavoritesState({ ...favoritesState, showManageFavorites: false })
-      }
+    onMouseEnter={() => setShowManageFavorites(true)}
+    onMouseLeave={() => setShowManageFavorites(false)}
       className="relative rounded-full p-2 text-center outline outline-zinc-700 hover:outline-white"
     >
       {/* THIS ICON WILL CHANGE BASED ON THE RATING STATE IN DB DEFAULT FITHUMBSUP*/}
@@ -96,8 +83,8 @@ const LikeButton: React.FC<LikeButtonProps> = ({
         (rating) => rating.movieId === movieId
       ) ? (
         <>
-          {selectedAccount.movieRating.map((rating) => (
-            <React.Fragment key={rating.movieId}>
+          {selectedAccount.movieRating.map((rating, i) => (
+            <React.Fragment key={i}>
               {rating.movieId === movieId &&  rating.movieRating === "dislike" ? (
                 <BsFillHandThumbsDownFill  size={iconSize} />
               ) : rating.movieId === movieId && rating.movieRating === "like" ? (
@@ -111,10 +98,10 @@ const LikeButton: React.FC<LikeButtonProps> = ({
       ) : (
         <FiThumbsUp size={iconSize} />
       )}
-      {favoritesState.showManageFavorites && (
+      {showManageFavorites && (
         <div
           className={`absolute rounded-full top-0 -left-full flex gap-3 px-3 py-1 bg-neutral-800 shadow-sm shadow-black/70 transition-all duration-500 ease-in-out ${
-            favoritesState.isHoveringFavorites
+            isHoveringFavorites
               ? "opacity-100 scale-125"
               : "opacity-0 scale-50"
           }`}
@@ -122,21 +109,11 @@ const LikeButton: React.FC<LikeButtonProps> = ({
           <div
             className="relative rounded-full p-1 hover:bg-neutral-500"
             onClick={(e) => handleLike(e, "dislike")}
-            onMouseEnter={() =>
-              setFavoritesState({
-                ...favoritesState,
-                isFavoriteHoverHelpDislikeTextVisible: true,
-              })
-            }
-            onMouseLeave={() =>
-              setFavoritesState({
-                ...favoritesState,
-                isFavoriteHoverHelpDislikeTextVisible: false,
-              })
-            }
+            onMouseEnter={() => setIsFavoriteHoverHelpDislikeTextVisible(true)}
+            onMouseLeave={() => setIsFavoriteHoverHelpDislikeTextVisible(false)}
           >
             <DynamicIcon size={iconSize} type="thumbsDown" />
-            {favoritesState.isFavoriteHoverHelpDislikeTextVisible && (
+            {isFavoriteHoverHelpDislikeTextVisible && (
               <>
                 <div
                   className={`absolute bg-white  ${
@@ -158,57 +135,38 @@ const LikeButton: React.FC<LikeButtonProps> = ({
           <div
             className="relative rounded-full p-1 hover:bg-neutral-500"
             onClick={(e) => handleLike(e, "like")}
-            onMouseEnter={() =>
-              setFavoritesState({
-                ...favoritesState,
-                isFavoriteHoverHelpLikeTextVisible: true,
-              })
-            }
-            onMouseLeave={() =>
-              setFavoritesState({
-                ...favoritesState,
-                isFavoriteHoverHelpLikeTextVisible: false,
-              })
-            }
+            onMouseEnter={() => setIsFavoriteHoverHelpLikeTextVisible(true)}
+            onMouseLeave={() => setIsFavoriteHoverHelpLikeTextVisible(false)}
           >
+             
             <DynamicIcon size={iconSize} type="thumbsUp" />
-            {favoritesState.isFavoriteHoverHelpLikeTextVisible && (
-              <>
-                <div
-                  className={`absolute bg-white ${
-                    iconSize === 30
-                      ? "-left-7 text-[15px] -top-8"
-                      : "-left-full text-[9px] -top-6"
-                  } text-[9px] font-bold text-black rounded-sm px-2 z-10`}
-                >
-                  To&nbsp;se&nbsp;mi&nbsp;líbí
-                </div>
-                <div
-                  className={`absolute w-3 h-3 bg-white -top-4 ${
-                    iconSize === 30 ? "left-3" : "left-1"
-                  } rotate-45`}
-                ></div>
-              </>
+            {isFavoriteHoverHelpLikeTextVisible && (
+             <>
+             <div
+               className={`absolute bg-white  ${
+                 iconSize === 30
+                   ? "-left-7 text-[15px] -top-8"
+                   : "-left-full text-[9px] -top-6"
+               } font-bold text-black rounded-sm px-2 z-10`}
+             >
+               To&nbsp;se&nbsp;mi&nbsp;líbí
+             </div>
+             <div
+               className={`absolute w-3 h-3 bg-white -top-4  ${
+                 iconSize === 30 ? "left-3" : "left-1"
+               } rotate-45`}
+             ></div>
+           </>
             )}
           </div>
           <div
             className="relative rounded-full p-1 hover:bg-neutral-500"
             onClick={(e) => handleLike(e, "superlike")}
-            onMouseEnter={() =>
-              setFavoritesState({
-                ...favoritesState,
-                isFavoriteHoverHelpExtralikeTextVisible: true,
-              })
-            }
-            onMouseLeave={() =>
-              setFavoritesState({
-                ...favoritesState,
-                isFavoriteHoverHelpExtralikeTextVisible: false,
-              })
-            }
+            onMouseEnter={() => setIsFavoriteHoverHelpExtralikeTextVisible(true)}
+            onMouseLeave={() => setIsFavoriteHoverHelpExtralikeTextVisible(false)}
           >
             <DynamicIcon size={iconSize} type="heart" />
-            {favoritesState.isFavoriteHoverHelpExtralikeTextVisible && (
+            {isFavoriteHoverHelpExtralikeTextVisible && (
               <>
                 <div
                   className={`absolute bg-white ${

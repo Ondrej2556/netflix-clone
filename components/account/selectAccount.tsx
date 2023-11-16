@@ -38,7 +38,7 @@ const SelectAccount = () => {
     setTimeout(()=> {
       setIsOpen(true);
     }, 300)
-  }, [session, setUserAccounts]);
+  }, [session, setUserAccounts, router]);
 
   return (
     <main className=" w-screen h-screen flex flex-col justify-center items-center gap-4 bg-neutral-900 text-neutral-500">

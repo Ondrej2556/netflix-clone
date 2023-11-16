@@ -14,7 +14,7 @@ import { AiOutlinePlaySquare } from "react-icons/ai";
 import { toast } from "react-toastify";
 
 const YourAccount = () => {
-  const { userAccounts, setAccount, setUserAccounts, reset } = useUserStore();
+  const { userAccounts, setAccount, setUserAccounts } = useUserStore();
   const { data: session } = useSession();
 
   const router = useRouter();
@@ -49,6 +49,8 @@ const YourAccount = () => {
       getUserAccounts();
     }
   }, [setUserAccounts, router, session, setAccount, userAccounts]);
+
+  /* TODO: Add more user settings (Change email, Change password) - then log him out and refresh */
 
   const handleUserDelete = async () => {
     if (confirm("Opravdu si přejete smazat účet?")) {
@@ -134,8 +136,8 @@ const YourAccount = () => {
                       <div key={i}>
                         <div className="flex gap-4 items-center">
                           <Image
-                            height={10}
-                            width={10}
+                            height={14}
+                            width={14}
                             src={account.imageUrl}
                             alt={account.nickname}
                             className="h-14 w-14 rounded-md"

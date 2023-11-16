@@ -95,6 +95,9 @@ const Browse = () => {
           <header>
             <LoggedNavbar />
             <Hero
+            data={series}
+            openMovieModal={SetIsMovieModalOpen}
+            selectMovie={setSelectedMovie}
               BGimageUrl="/images/loggedHero.webp"
               LOGOimageUrl="/images/loggedHeroTitle.webp"
               title="Potvrzeno: další řada je na cestě"

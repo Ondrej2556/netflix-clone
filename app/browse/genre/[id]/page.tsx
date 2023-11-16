@@ -19,22 +19,22 @@ const genreData: { [key: string]: any } = {
     LOGOimageUrl: "/images/loggedHeroTitle.webp",
     title: "Potvrzeno: další řada je na cestě",
     description:
-    'Pár desítek let po turnaji, který jim změnil život, na sebe znova narazí soupeři Johny a Daniel. Další pokračování série filmů "Karate Kid".',
+      'Pár desítek let po turnaji, který jim změnil život, na sebe znova narazí soupeři Johny a Daniel. Další pokračování série filmů "Karate Kid".',
     movieId: "65462455a3658eac9b2beb42",
   },
   "2": {
     BGimageUrl: "/images/loggedHeroMovie.webp",
     LOGOimageUrl: "/images/loggedHeroTitleMovie.webp",
-    title: "Ježek Sonic",
+    title: "ONEMANSHOW The Movie",
     description:
-    "Sonic se chce mermomocí stát hrdinou. Spojí proto síly s novým kamarádem Tailsem, aby zastavili doktora Robotnika a ježuru Knucklese.",
-    movieId:"654f6885854ab4ce147997fc"
+      "Internetová hvězda a poťouchlý vtipálek Kazma prozradí, jak vznikal jeden z jeho nejodvážnějších kousků, a přitom se ještě sám sebe pokusí trumfnout.",
+    movieId: "6555e3f5aeccc86fee99ca06",
   },
 };
 
 const Genre = ({ params }: { params: { id: string } }) => {
   const { userAccounts, selectedAccount, setAccount, setUserAccounts } =
-  useUserStore();
+    useUserStore();
   const { data: session } = useSession();
   const [movies, setMovies] = useState<Movie[] | undefined>();
   const [isMovieModalOpen, SetIsMovieModalOpen] = useState(false);
@@ -43,8 +43,6 @@ const Genre = ({ params }: { params: { id: string } }) => {
     {}
   );
   const router = useRouter();
-  
-
 
   useEffect(() => {
     if (!(params.id === "1" || params.id === "2") || !params.id) {
@@ -60,8 +58,8 @@ const Genre = ({ params }: { params: { id: string } }) => {
     if (account) {
       setAccount(JSON.parse(account));
     }
-    
-    if(!selectedAccount) {
+
+    if (!selectedAccount) {
       router.push("/browse");
       return;
     }
@@ -99,8 +97,6 @@ const Genre = ({ params }: { params: { id: string } }) => {
     getMovies();
   }, [setMovies, setUserAccounts]);
 
-
-  
   const selectedData = genreData[params.id] || genreData["2"];
 
   useEffect(() => {
@@ -127,6 +123,9 @@ const Genre = ({ params }: { params: { id: string } }) => {
           <header>
             <LoggedNavbar />
             <Hero
+              data={movies}
+              openMovieModal={SetIsMovieModalOpen}
+              selectMovie={setSelectedMovie}
               BGimageUrl={selectedData.BGimageUrl}
               LOGOimageUrl={selectedData.LOGOimageUrl}
               title={selectedData.title}

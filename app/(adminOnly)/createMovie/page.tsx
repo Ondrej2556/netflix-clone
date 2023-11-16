@@ -272,6 +272,3 @@ const CreateMovie = () => {
 
 export default CreateMovie;
 
-{
-  /* TODO: ADD DURATION, AND YEAR VYDANI, DESCRIPTION, OBASAZENI */
-}
