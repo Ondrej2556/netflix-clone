@@ -19,6 +19,7 @@ interface accountFromProps {
     nameError: boolean;
     setNameError:  React.Dispatch<React.SetStateAction<boolean>>;
     closeModal: React.Dispatch<React.SetStateAction<boolean>>;
+    loading: boolean;
 }
 
 const AccountForm:React.FC<accountFromProps> = ({
@@ -33,7 +34,8 @@ const AccountForm:React.FC<accountFromProps> = ({
     formSecondActionLabel,
     nameError,
     setNameError,
-    closeModal
+    closeModal,
+    loading
 }) => {
   return (
     <div className="flex flex-col mt-16 gap-4 self-center">
@@ -68,15 +70,23 @@ const AccountForm:React.FC<accountFromProps> = ({
         />
       </div>
       <button
+        disabled={loading}
         onClick={formAction}
-        className="rounded-md py-2 px-4 bg-white text-black hover:bg-red-700 transition"
+        className={`rounded-md py-2 px-4 bg-white text-black transition ${
+          loading
+          ? "bg-red-800 hover:cursor-wait"
+          : "bg-red-700 hover:bg-red-700"}`}
       >
         {formActionLabel}
       </button>
       {formSecondAction&&(
       <button
+      disabled={loading}
       onClick={formSecondAction}
-        className="rounded-md py-2 px-4 bg-white text-black hover:bg-red-700 transition"
+        className={`rounded-md py-2 px-4 bg-white text-black transition ${
+          loading
+          ? "bg-red-800 hover:cursor-wait"
+          : "bg-red-700 hover:bg-red-700"}`}
       >
         {formSecondActionLabel}
       </button>

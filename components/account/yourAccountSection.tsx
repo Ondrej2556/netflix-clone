@@ -4,6 +4,7 @@ interface YourAccountSectionProps {
     title: string;
     buttonTitle?: string;
     buttonAction?: () => void;
+    loading?: boolean;
     leftData: string[];
     rightData: string[];
     rightDataAction?: any;
@@ -16,6 +17,7 @@ const YourAccountSection:React.FC<YourAccountSectionProps> = ({
     leftData,
     rightData,
     rightDataAction,
+    loading
 }) => {
   return (
     <div className="flex gap-10 pt-2 w-full">
@@ -23,6 +25,7 @@ const YourAccountSection:React.FC<YourAccountSectionProps> = ({
         <h3 className="text-xl text-neutral-500 ">{title}</h3>
         {buttonTitle && (
         <button 
+        disabled={loading}
         onClick={buttonAction}
         className="bg-neutral-200 py-2 shadow-sm shadow-black/40 mt-2 w-2/3 ">
           {buttonTitle}

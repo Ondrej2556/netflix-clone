@@ -12,6 +12,7 @@ const CreateAccount = () => {
   const [profilePic, setProfilePic] = useState<string>("blue");
   const [nickname, setNickname] = useState<string>("");
   const [nameError, setNameError] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false)
   const {reset} = useUserStore()
   const router = useRouter();
   const { data: session } = useSession();
@@ -27,17 +28,20 @@ const CreateAccount = () => {
     }
 
     try {
+      setLoading(true)
       await axios.post("/api/account", {
         nickname,
         imageUrl: `/images/default-${profilePic}.png`,
         email: session?.user?.email,
       });
       toast.success("Účet vytvořen");
-      router.push("/");
+      router.push("/browse");
       localStorage.removeItem("account");
       reset();
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false)
     }
   };
   return (
@@ -53,6 +57,7 @@ const CreateAccount = () => {
         closeModal={() => router.push("/browse")}
         nameError={nameError}
         setNameError={setNameError}
+        loading={loading}
       />
     </main>
   );

@@ -34,6 +34,7 @@ const CreateAccount: React.FC<editAccountProps> = ({
   const [nickname, setNickname] = useState(name);
   const [nameError, setNameError] = useState(false);
   const [isOpen, setIsOpen] = useState(isEditOpen);
+  const [loading ,setLoading] = useState<boolean>(false)
   const { reset } = useUserStore();
   const router = useRouter();
   const { data: session } = useSession() as SessionData;
@@ -63,6 +64,7 @@ const CreateAccount: React.FC<editAccountProps> = ({
 
   const editProfile = async () => {
     try {
+      setLoading(true)
       await axios.put("/api/account", {
         accountId,
         nickname,
@@ -72,13 +74,16 @@ const CreateAccount: React.FC<editAccountProps> = ({
       toast.success("Účet upraven");
       localStorage.removeItem("account");
       reset();
-      router.push("/");
+      router.push("/browse");
     } catch (error) {
       toast.error("Failed to update account");
+    } finally {
+      setLoading(false)
     }
   };
   const deleteAccount = async () => {
     try {
+      setLoading(true)
       await axios.delete("/api/account", {
         params: {
           accountId,
@@ -86,11 +91,13 @@ const CreateAccount: React.FC<editAccountProps> = ({
         },
       });
       toast.success("Účet smazán");
-      router.push("/");
+      router.push("/browse");
       localStorage.removeItem("account");
       reset();
     } catch (error) {
       toast.error("Failed to delete account");
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -116,6 +123,7 @@ const CreateAccount: React.FC<editAccountProps> = ({
             nameError={nameError}
             setNameError={setNameError}
             closeModal={handleClose}
+            loading={loading}
           />
         </div>
       )}

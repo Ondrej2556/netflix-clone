@@ -39,6 +39,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({
   const [ isFavoriteHoverHelpLikeTextVisible, setIsFavoriteHoverHelpLikeTextVisible ] = useState<boolean>(false);
   const [isFavoriteHoverHelpDislikeTextVisible,setIsFavoriteHoverHelpDislikeTextVisible] = useState<boolean>(false);
   const [isFavoriteHoverHelpExtralikeTextVisible,setIsFavoriteHoverHelpExtralikeTextVisible] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false)
 
   const { setAccount, selectedAccount } = useUserStore();
   const router = useRouter();
@@ -53,9 +54,8 @@ const LikeButton: React.FC<LikeButtonProps> = ({
     type: "like" | "dislike" | "superlike" | "unset"
   ) => {
     e.stopPropagation();
- 
-    //like, dislike or superlike it - then based on it display icon
     try {
+      setLoading(true)
       const res = await axios.put("/api/account/movie/favorites", {
         accountId: userId,
         movieId,
@@ -64,9 +64,11 @@ const LikeButton: React.FC<LikeButtonProps> = ({
       localStorage.removeItem("account");
       setAccount(res.data);
       localStorage.setItem("account", JSON.stringify(res.data));
-      router.push("/");
+      router.push("/browse");
     } catch (error) {
       toast.error("Something went wrong.");
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -106,8 +108,9 @@ const LikeButton: React.FC<LikeButtonProps> = ({
               : "opacity-0 scale-50"
           }`}
         >
-          <div
-            className="relative rounded-full p-1 hover:bg-neutral-500"
+          <button
+            disabled={loading}
+            className={`relative rounded-full p-1 hover:bg-neutral-500 ${loading ? "hover:cursor-wait" : "cursor-pointer"}`}
             onClick={(e) => handleLike(e, "dislike")}
             onMouseEnter={() => setIsFavoriteHoverHelpDislikeTextVisible(true)}
             onMouseLeave={() => setIsFavoriteHoverHelpDislikeTextVisible(false)}
@@ -131,9 +134,10 @@ const LikeButton: React.FC<LikeButtonProps> = ({
                 ></div>
               </>
             )}
-          </div>
-          <div
-            className="relative rounded-full p-1 hover:bg-neutral-500"
+          </button>
+          <button
+            disabled={loading}
+            className={`relative rounded-full p-1 hover:bg-neutral-500 ${loading ? "hover:cursor-wait" : "cursor-pointer"}`}
             onClick={(e) => handleLike(e, "like")}
             onMouseEnter={() => setIsFavoriteHoverHelpLikeTextVisible(true)}
             onMouseLeave={() => setIsFavoriteHoverHelpLikeTextVisible(false)}
@@ -158,9 +162,10 @@ const LikeButton: React.FC<LikeButtonProps> = ({
              ></div>
            </>
             )}
-          </div>
-          <div
-            className="relative rounded-full p-1 hover:bg-neutral-500"
+          </button>
+          <button
+            disabled={loading}
+            className={`relative rounded-full p-1 hover:bg-neutral-500 ${loading ? "hover:cursor-wait" : "cursor-pointer"}`}
             onClick={(e) => handleLike(e, "superlike")}
             onMouseEnter={() => setIsFavoriteHoverHelpExtralikeTextVisible(true)}
             onMouseLeave={() => setIsFavoriteHoverHelpExtralikeTextVisible(false)}
@@ -184,7 +189,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({
                 ></div>
               </>
             )}
-          </div>
+          </button>
         </div>
       )}
     </span>

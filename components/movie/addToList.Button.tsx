@@ -20,12 +20,14 @@ const AddToListButton: React.FC<AddToListButtonProps> = ({
   size,
 }) => {
   const [isHelpTextVisible, setisHelpTextVisible] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const { setAccount } = useUserStore();
   const router = useRouter();
 
   const handleLike = async (e: React.MouseEvent) => {
     e.stopPropagation();
     try {
+      setLoading(true)
       const res = await axios.put("/api/account/movie/list", {
         accountId: userId,
         movieId,
@@ -38,17 +40,20 @@ const AddToListButton: React.FC<AddToListButtonProps> = ({
       localStorage.removeItem("account");
       setAccount(res.data);
       localStorage.setItem("account", JSON.stringify(res.data));
-      router.push("/");
+      router.push("/browse");
     } catch (error) {
       toast.error("Something went wrong");
+    } finally {
+      setLoading(false)
     }
   };
   return (
-    <span
+    <button
+      disabled={loading}
       onMouseEnter={() => setisHelpTextVisible(true)}
       onMouseLeave={() => setisHelpTextVisible(false)}
       onClick={handleLike}
-      className="relative rounded-full p-2 text-center outline outline-zinc-700 hover:outline-white"
+      className={`relative rounded-full p-2 text-center outline outline-zinc-700 hover:outline-white ${loading ? "hover:cursor-wait" : "cursor-pointer"}`}
     >
       {type === "add" ? (
         <AiOutlinePlus size={size} />
@@ -75,7 +80,7 @@ const AddToListButton: React.FC<AddToListButtonProps> = ({
           ></div>
         </>
       )}
-    </span>
+    </button>
   );
 };
 

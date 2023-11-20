@@ -9,11 +9,12 @@ import axios from "axios";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlinePlaySquare } from "react-icons/ai";
 import { toast } from "react-toastify";
 
 const YourAccount = () => {
+  const [loading, setLoading] = useState<boolean>(false)
   const { userAccounts, setAccount, setUserAccounts } = useUserStore();
   const { data: session } = useSession();
 
@@ -53,6 +54,7 @@ const YourAccount = () => {
   /* TODO: Add more user settings (Change email, Change password) - then log him out and refresh */
 
   const handleUserDelete = async () => {
+    setLoading(true)
     if (confirm("Opravdu si přejete smazat účet?")) {
       try {
         await axios.delete("/api/user", {
@@ -64,8 +66,11 @@ const YourAccount = () => {
         router.push("/");
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false)
       }
     }
+    setLoading(false)
   };
   return (
     <>
@@ -86,6 +91,7 @@ const YourAccount = () => {
                   title="ČLENSTVÍ A FAKTURACE"
                   buttonTitle="Zručit členství"
                   buttonAction={handleUserDelete}
+                  loading={loading}
                   leftData={[
                     `E-mail: ${session.user?.email}`,
                     "Heslo: XXXXXXXX",
